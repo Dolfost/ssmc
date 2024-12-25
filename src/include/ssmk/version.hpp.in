@@ -1,0 +1,18 @@
+#ifndef _SSMK_VERSION_HPP_
+#define _SSMK_VERSION_HPP_
+
+#include <string>
+
+namespace sm {
+
+struct {
+	const std::string full = "@ssmk_VERSION@";
+	const int major = @ssmk_VERSION_MAJOR@ + 0;
+	const int minor = @ssmk_VERSION_MINOR@ + 0;
+	const int patch = @ssmk_VERSION_PATCH@ + 0;
+	const int tweak = @ssmk_VERSION_TWEAK@ + 0;
+} version;
+
+}
+
+#endif // !_SSMK_VERSION_HPP_

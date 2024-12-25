@@ -1,7 +1,17 @@
-#include<iostream>
+#include <ostream>
+#include <cstdlib>
 
-int main(int argc, char** argv) {
-	std::cout << "Hello, world!" << std::endl;
+#include <ssmk/context.hpp>
+#include <ssmk/version.hpp>
 
-	return 0;
+int main(int argc, const char** argv) {
+	sm::Context context("ssmk", sm::version.full);
+	int code = EXIT_SUCCESS;
+
+	if (!(code = context.parse(argc, argv))) {
+		std::cout << "file: " << context.sourceDirectory << std::endl
+			<< "verbosity: " << (int)context.verbosity << std::endl;
+	}
+
+	return code;
 }
