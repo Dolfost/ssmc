@@ -30,6 +30,7 @@ public:
 	GETSET(Context, cliContext)
 	GETSET(sm::Context, context)
 	GETSET(std::string, name)
+	GETSET(std::string, description)
 	GETSET(std::string, version)
 
 private:

@@ -22,7 +22,7 @@ void Application::setOptions() {
 	#endif
 
 	a_app.add_option("-s,--source", a_context.sourceDirectory)
-		->description("Root directory of image tree with ssmk.toml")
+		->description(a_description)
 		->type_name("PATH");
 
 	a_app.add_option("-v,--verbose", a_cliContext.verbosity)
