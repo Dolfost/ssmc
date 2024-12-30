@@ -2,15 +2,13 @@
 
 #include <string>
 #include <cstdlib>
+#include <iostream>
+
+#include <ssmk/version.hpp>
 
 namespace sm::cli {
 
-Application::Application(std::string name): a_name(name) {
-}
-
 void Application::setOptions() {
-	a_app.name(a_name)
-		->description("Sprite sheet make program");
 	a_app.option_defaults()
 		->always_capture_default(true)
 		->ignore_case(false)
@@ -21,13 +19,12 @@ void Application::setOptions() {
 	a_app.allow_windows_style_options();
 	#endif
 
-	a_app.add_option("-s,--source", a_context.sourceDirectory)
-		->description(a_description)
+	a_app.add_option("-s,--source", a_ssmk.context.sourceDirectory)
+		->description("Root directory of image tree with ssmk.toml")
 		->type_name("PATH");
 
-	a_app.add_option("-v,--verbose", a_cliContext.verbosity)
+	a_app.add_option("-v,--verbose", a_context.verbosity)
 		->type_name("LVL")
-		->default_str("DFSTR")
 		->description("Verbosity level")
 		->check(
 			CLI::Range(
@@ -36,13 +33,25 @@ void Application::setOptions() {
 			)
 		);
 
-	a_app.set_version_flag("--version", a_version);
 	a_app.set_help_flag("-h,--help", "Print this message and exit");
+	a_app.add_flag_callback(
+		"--ssmk-version",
+		[]() { throw CLI::CallForVersion(sm::version.full, EXIT_SUCCESS); },
+		"Display ssmk library version information and exit"
+	);
 }
 
-bool Application::parse(int argc, const char** argv) {
-	a_cliContext = sm::cli::Context();
-	a_context = sm::Context();
+void Application::setOptionsStrings() {
+	a_app.name(a_name)
+		->description(a_description);
+	a_app.set_version_flag("--version", a_version);
+}
+
+int Application::parse(int argc, const char** argv) {
+	setOptionsStrings();
+
+	a_context = sm::cli::Context();
+	a_ssmk.context = sm::Context();
 
 	try {
 		a_app.parse(argc, argv);

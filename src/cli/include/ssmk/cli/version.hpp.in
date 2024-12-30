@@ -1,0 +1,18 @@
+#ifndef _SSMK_CLI_VERSION_HPP_
+#define _SSMK_CLI_VERSION_HPP_
+
+#include <string>
+
+namespace sm::cli {
+
+struct {
+	const std::string full = "@ssmk-cli_VERSION@";
+	const int major = @ssmk-cli_VERSION_MAJOR@ + 0;
+	const int minor = @ssmk-cli_VERSION_MINOR@ + 0;
+	const int patch = @ssmk-cli_VERSION_PATCH@ + 0;
+	const int tweak = @ssmk-cli_VERSION_TWEAK@ + 0;
+} version;
+
+}
+
+#endif // !_SSMK_CLI_VERSION_HPP_

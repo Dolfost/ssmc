@@ -7,11 +7,25 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(cli11_proj)
 
+project(ssmk-cli
+	LANGUAGES CXX
+	VERSION 0.1.1.0
+	DESCRIPTION 
+		"Sprite sheet make program command line interface"
+)
+
 add_executable(sm_ssmk_cli
 	src/main.cpp
-	src/options.cpp
+	src/cli/application.cpp
+	src/cli/options.cpp
+	src/cli/run.cpp
 )
 add_executable(sm::ssmk::cli ALIAS sm_ssmk_cli)
+
+configure_file(
+	include/ssmk/cli/version.hpp.in 
+	include/ssmk/cli/version.hpp
+)
 
 set_target_properties(sm_ssmk_cli PROPERTIES
 	VERSION ${PROJECT_VERSION}
@@ -22,8 +36,11 @@ set_target_properties(sm_ssmk_cli PROPERTIES
 target_sources(sm_ssmk_cli
 	PUBLIC FILE_SET HEADERS
 		BASE_DIRS 
+			"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
 			"include"
 		FILES 
+			"${CMAKE_CURRENT_BINARY_DIR}/include/ssmk/cli/version.hpp"
+			include/ssmk/cli/application.hpp
 			include/ssmk/cli/context.hpp
 )
 

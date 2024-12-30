@@ -1,5 +1,5 @@
-#ifndef _SSMK_VERSION_HPP_
-#define _SSMK_VERSION_HPP_
+#ifndef _SSMK_SSMK_VERSION_HPP_
+#define _SSMK_SSMK_VERSION_HPP_
 
 #include <string>
 
@@ -15,4 +15,4 @@ struct {
 
 }
 
-#endif // !_SSMK_VERSION_HPP_
+#endif // !_SSMK_SSMK_VERSION_HPP_

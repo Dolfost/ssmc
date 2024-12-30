@@ -7,10 +7,10 @@ list(APPEND CMAKE_MODULE_PATH
 include(cmake-scripts/gitversion)
 gitversion()
 
-project(ssmk
+project(ssmk-kit
 	LANGUAGES CXX
 	VERSION ${GIT_VERSION_TAG}
-	DESCRIPTION "Sprite sheet make program"
+	DESCRIPTION "Sprite sheet make program kit"
 )
 
 add_subdirectory(src)
