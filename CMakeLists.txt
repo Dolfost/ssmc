@@ -13,4 +13,5 @@ project(ssmk-kit
 	DESCRIPTION "Sprite sheet make program kit"
 )
 
+enable_testing()
 add_subdirectory(src)

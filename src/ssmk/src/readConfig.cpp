@@ -12,7 +12,7 @@ void Ssmk::readConfig() {
 	context.sourceDirectory = 
 		std::filesystem::absolute(context.sourceDirectory);
 	if (not std::filesystem::is_directory(context.sourceDirectory))
-		throw sm::ex::BadSourceDirectoryPath();
+		throw sm::ex::BadSourceDirectoryPath(context.sourceDirectory);
 
 	for (const auto& filename: configFilenames) {
 		if (std::filesystem::is_regular_file(context.sourceDirectory / filename)) {
@@ -22,7 +22,7 @@ void Ssmk::readConfig() {
 	}
 
 	if (context.configFile.empty())
-		throw sm::ex::ConfigNotFound();
+		throw sm::ex::ConfigNotFound(context.sourceDirectory);
 }
 
 }

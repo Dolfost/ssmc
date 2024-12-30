@@ -48,3 +48,5 @@ target_compile_definitions(sm_ssmk
 target_link_libraries(sm_ssmk
 	tomlplusplus::tomlplusplus 
 )
+
+add_subdirectory(tests)
