@@ -1,11 +1,16 @@
 include(FetchContent)
 FetchContent_Declare(
-    calgo
-    QUIET
+    calgo QUIET
     GIT_REPOSITORY https://github.com/Dolfost/calgo.git
     GIT_TAG v3.2.0.0
 )
 FetchContent_MakeAvailable(calgo)
+FetchContent_Declare(
+    tomlplusplus QUIET
+    GIT_REPOSITORY https://github.com/marzer/tomlplusplus.git
+    GIT_TAG v3.4.0
+)
+FetchContent_MakeAvailable(tomlplusplus)
 
 project(ssmk
 	LANGUAGES CXX
@@ -34,4 +39,12 @@ target_sources(sm_ssmk
 			include/ssmk/context.hpp
 			include/ssmk/ssmk.hpp
 			include/ssmk/exceptions.hpp
+)
+
+target_compile_definitions(sm_ssmk
+	PRIVATE TOML_HEADER_ONLY=0
+)
+
+target_link_libraries(sm_ssmk
+	tomlplusplus::tomlplusplus 
 )

@@ -4,6 +4,7 @@
 #include <ssmk/context.hpp>
 
 #include <functional>
+#include <filesystem>
 
 #define CALLBACK(NAME) \
 	private: \
@@ -60,6 +61,11 @@ public:
 		writeImages();
 		writeSheetInfo();
 	}
+
+public:
+	constexpr static const std::array configFilenames = {
+		"ssmk.toml", "sprite.toml", "spritesheet.toml"
+	};
 
 private:
 	sm::Context s_context;

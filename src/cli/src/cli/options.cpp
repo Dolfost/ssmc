@@ -2,7 +2,6 @@
 
 #include <string>
 #include <cstdlib>
-#include <iostream>
 
 #include <ssmk/version.hpp>
 
@@ -19,8 +18,9 @@ void Application::setOptions() {
 	a_app.allow_windows_style_options();
 	#endif
 
-	a_app.add_option("-s,--source", a_ssmk.context.sourceDirectory)
+	a_app.add_option("-s,--source", context.sourceDirectory)
 		->description("Root directory of image tree with ssmk.toml")
+		->check(CLI::ExistingDirectory)
 		->type_name("PATH");
 
 	a_app.add_option("-v,--verbose", a_context.verbosity)
