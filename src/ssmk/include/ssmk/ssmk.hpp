@@ -5,17 +5,21 @@
 
 #include <functional>
 
-#define CALLBACK(NAME) \
-	private: \
-		std::function<void(const sm::Context&)> s_##NAME##Callback; \
+#define CALLBACK(NAME, CALLFIELDS) \
 	public: \
-		void NAME##Callback(const std::function<void(const sm::Context&)>& callback) { \
+		struct Callback##NAME##Info: CallbackInfo { \
+			CALLFIELDS \
+		}; \
+	private: \
+		std::function<void(const Callback##NAME##Info&)> s_##NAME##Callback; \
+	public: \
+		void NAME##Callback(const std::function<void(const Callback##NAME##Info&)>& callback) { \
 			s_##NAME##Callback = callback; \
 		} \
-		const std::function<void(const sm::Context&)>& NAME##Callback() const { \
+		const std::function<void(const Callback##NAME##Info&)>& NAME##Callback() const { \
 			return s_##NAME##Callback; \
 		} \
-		std::function<void(const sm::Context&)>& NAME##Callback() { \
+		std::function<void(const Callback##NAME##Info&)>& NAME##Callback() { \
 			return s_##NAME##Callback; \
 		}
 
@@ -28,28 +32,78 @@ public:
 	sm::Context& context = s_context;
 
 public:
+	struct CallbackInfo {
+		const Ssmk& ssmk;
+	};
+	struct Sprite;
+
+public:
 	void readConfig();
-	CALLBACK(configRead)
+	CALLBACK(configRead,)
 
 	void findFiles() {};
-	CALLBACK(fileFound)
-	CALLBACK(filesFound)
+	CALLBACK(
+		fileFound, 
+		const Sprite& image;
+	)
+	CALLBACK(
+		filesFound, 
+		const std::vector<Sprite>& images;
+	)
 
 	void readImageHeaders() {};
-	CALLBACK(imageHeaderRead)
-	CALLBACK(imageHeadersRead)
+	CALLBACK(
+		imageHeaderRead,
+		const Sprite& image;
+		std::size_t headerNo;
+		std::size_t headerCount;
+	)
+	CALLBACK(
+	imageHeadersRead,
+		const std::vector<Sprite>& images;
+	)
 
 	void packImages() {};
-	CALLBACK(imagePacked)
-	CALLBACK(imagesPacked)
+	CALLBACK(
+		imagePacked,
+		const Sprite& image;
+		std::size_t imageCount;
+		std::size_t imageNo;
+	)
+	CALLBACK(
+		imagesPacked,
+		const std::vector<Sprite>& images;
+	)
 
 	void writeImages() {};
-	CALLBACK(imageWritten)
-	CALLBACK(imagesWritten)
+	CALLBACK(
+		imageRowWritten,
+		const Sprite& image;
+		std::size_t rowCount;
+		std::size_t rowNo;
+	)
+	CALLBACK(
+		imageWritten,
+		const Sprite& image;
+		std::size_t imageCount;
+		std::size_t imageNo;
+	)
+	CALLBACK(
+		imagesWritten,
+		const std::vector<Sprite>& images;
+	)
 
 	void writeSheetInfo() {};
-	CALLBACK(sheetEntryWritten)
-	CALLBACK(sheetInfoWritten)
+	CALLBACK(
+		sheetEntryWritten,
+		const Sprite& image;
+		std::size_t spriteCount;
+		std::size_t spriteNo;
+	)
+	CALLBACK(
+		sheetInfoWritten,
+		const std::vector<Sprite>& images;
+	)
 
 public:
 	void operator()() {
@@ -60,6 +114,8 @@ public:
 		writeImages();
 		writeSheetInfo();
 	}
+
+	static void fillContext(sm::Context& context);
 
 public:
 	constexpr static const std::array configFilenames = {

@@ -21,6 +21,7 @@ project(ssmk
 
 add_library(sm_ssmk 
 	src/readConfig.cpp
+	src/fillContext.cpp
 )
 add_library(sm::ssmk ALIAS sm_ssmk)
 
@@ -38,11 +39,13 @@ target_sources(sm_ssmk
 			include/ssmk/ssmk.hpp
 			"${CMAKE_CURRENT_BINARY_DIR}/include/ssmk/version.hpp"
 			include/ssmk/context.hpp
+			include/ssmk/sprite.hpp
 			include/ssmk/exceptions.hpp
 )
 
 target_link_libraries(sm_ssmk
 	tomlplusplus::tomlplusplus 
+	ca::optim
 )
 
 add_subdirectory(tests)

@@ -1,5 +1,7 @@
-#ifndef _SSMK_CONTEXT_HPP_
-#define _SSMK_CONTEXT_HPP_
+#ifndef _SSMK_SSMK_CONTEXT_HPP_
+#define _SSMK_SSMK_CONTEXT_HPP_
+
+#include <ssmk/sprite.hpp>
 
 #include <vector>
 #include <string>
@@ -14,23 +16,32 @@ struct Context {
 	std::filesystem::path configFile;
 	std::filesystem::path outputFile;
 
+	std::vector<Sprite> sprites;
+
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
-		#define S(PROP) << #PROP ": " << c.PROP << std::endl
+		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
+		#define SV(PROP) \
+			os << #PROP ": "; \
+			for (const auto& r : c.PROP) { \
+				os << r; \
+			} \
+			os << std::endl;
 
-		os << "fileRegex: ";
-		for (const auto& r : c.inputFiles) {
-			os << r;
-		}
+		SV(inputFiles)
 
-		return os << std::endl
-			S(sourceDirectory)
-			S(outputFile)
-			S(configFile);
+		S(sourceDirectory)
+		S(outputFile)
+		S(configFile)
+
+		SV(sprites)
+
+		return os;
 
 		#undef S
+		#undef SV
 	}
 };
 
 }
 
-#endif // !_SSMK_CONTEXT_HPP_
+#endif // !_SSMK_SSMK_CONTEXT_HPP_

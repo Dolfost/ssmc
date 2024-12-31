@@ -1,5 +1,7 @@
 #include <ssmk/cli/application.hpp>
+
 #include <ssmk/ssmk.hpp>
+#include <ssmk/exceptions.hpp>
 
 #include <cstdlib>
 
@@ -15,15 +17,21 @@ int Application::run(int argc, const char** argv) {
 
 	std::cout << "CLI context:\n" << context << std::endl;
 
+	int code = EXIT_SUCCESS;
+
 	try {
 		a_ssmk();
+	} catch (sm::ex::Error& ex) {
+		std::cerr << "SSMK Error: " << ex.what() << std::endl;
+		code = ex.code();
 	} catch (std::exception& ex) {
-		std::cout << "Error: " << ex.what() << std::endl;
+		std::cerr << "Error: " << ex.what() << std::endl;
+		code = EXIT_FAILURE;
 	}
 
 	std::cout << "SSMK context:\n" << a_ssmk.context << std::endl;
 
-	return EXIT_SUCCESS;
+	return code;
 }
 
 }
