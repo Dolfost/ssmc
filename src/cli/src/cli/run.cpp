@@ -15,7 +15,11 @@ int Application::run(int argc, const char** argv) {
 
 	std::cout << "CLI context:\n" << context << std::endl;
 
-	a_ssmk();
+	try {
+		a_ssmk();
+	} catch (std::exception& ex) {
+		std::cout << "Error: " << ex.what() << std::endl;
+	}
 
 	std::cout << "SSMK context:\n" << a_ssmk.context << std::endl;
 

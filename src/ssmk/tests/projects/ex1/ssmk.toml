@@ -1,0 +1,5 @@
+[input]
+files = [ 'abc', 'efg' ]
+
+[output]
+file = "file.png"

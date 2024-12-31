@@ -35,14 +35,10 @@ target_sources(sm_ssmk
 			"$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
 			"include"
 		FILES 
+			include/ssmk/ssmk.hpp
 			"${CMAKE_CURRENT_BINARY_DIR}/include/ssmk/version.hpp"
 			include/ssmk/context.hpp
-			include/ssmk/ssmk.hpp
 			include/ssmk/exceptions.hpp
-)
-
-target_compile_definitions(sm_ssmk
-	PRIVATE TOML_HEADER_ONLY=0
 )
 
 target_link_libraries(sm_ssmk

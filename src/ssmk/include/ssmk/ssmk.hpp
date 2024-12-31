@@ -4,7 +4,6 @@
 #include <ssmk/context.hpp>
 
 #include <functional>
-#include <filesystem>
 
 #define CALLBACK(NAME) \
 	private: \
