@@ -1,5 +1,5 @@
 [input]
-files = [ 'abc', 'efg' ]
+files = [ 'png', 'test1.png', 'test2.png' ]
 
 [output]
 file = "file.png"

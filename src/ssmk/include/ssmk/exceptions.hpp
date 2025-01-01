@@ -25,6 +25,7 @@ enum {
 	BadSourceDirectoryPath,
 	ConfigNotFound,
 	ParseError,
+	NotFileOrDirectory,
 	SsmkErrorSpaceEnd,
 };
 }
@@ -58,6 +59,7 @@ public: \
 
 PATHERROR(BadSourceDirectoryPath, "Source directory does not exists")
 PATHERROR(ConfigNotFound, "Config file not found")
+PATHERROR(NotFileOrDirectory, "Path is not a file or directory")
 
 class ParseError: public Error {
 public:

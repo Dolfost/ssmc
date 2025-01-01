@@ -2,6 +2,7 @@
 #define _SSMK_SSMK_HPP_
 
 #include <ssmk/context.hpp>
+#include <ssmk/sprite.hpp>
 
 #include <functional>
 
@@ -35,13 +36,12 @@ public:
 	struct CallbackInfo {
 		const Ssmk& ssmk;
 	};
-	struct Sprite;
 
 public:
 	void readConfig();
 	CALLBACK(configRead,)
 
-	void findFiles() {};
+	void findFiles();
 	CALLBACK(
 		fileFound, 
 		const Sprite& image;

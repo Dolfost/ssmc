@@ -2,7 +2,9 @@ include(FetchContent)
 FetchContent_Declare(
     calgo QUIET
     GIT_REPOSITORY https://github.com/Dolfost/calgo.git
-    GIT_TAG v3.2.0.0
+
+    # GIT_TAG v3.2.0.0
+    GIT_TAG 5a438c1
 )
 FetchContent_MakeAvailable(calgo)
 FetchContent_Declare(
@@ -22,6 +24,7 @@ project(ssmk
 add_library(sm_ssmk 
 	src/readConfig.cpp
 	src/fillContext.cpp
+	src/findFiles.cpp
 )
 add_library(sm::ssmk ALIAS sm_ssmk)
 

@@ -54,8 +54,13 @@ void Ssmk::fillContext(sm::Context& context) {
 	if (not filesArray)
 		throw sm::ex::NoFileArray(context.configFile);
 	if (filesArray->is_homogeneous<std::string>()) {
-		for (const auto& e: *filesArray)
-		context.inputFiles.push_back(e.as_string()->get());
+		std::filesystem::path path;
+		for (const auto& e: *filesArray) {
+			path = context.sourceDirectory / e.as_string()->get();
+			if (not (std::filesystem::is_regular_file(path) or std::filesystem::is_directory(path)))
+				throw sm::ex::NotFileOrDirectory(path);
+			context.inputFiles.push_back(path);
+		}
 	} else THROW_TOML(NotHomogeneousArray, filesArray)
 
 	toml::table* outputTable = table["output"].as_table();

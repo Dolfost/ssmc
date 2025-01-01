@@ -1,7 +1,6 @@
 #include <ssmk/ssmk.hpp>
 #include <ssmk/exceptions.hpp>
 
-
 namespace sm {
 
 void Ssmk::readConfig() {
