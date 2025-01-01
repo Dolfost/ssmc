@@ -5,63 +5,100 @@
 #include <string>
 #include <filesystem>
 #include <cstdlib>
+#include <unordered_map>
+
+#define SM_EX_THROW(EX, CODE, ...) \
+throw sm::ex::EX( \
+	__VA_ARGS__ __VA_OPT__(,) \
+	sm::ex::code::text.at(sm::ex::code::CODE), sm::ex::code::CODE \
+);
 
 namespace sm::ex {
 
-class Error: public std::runtime_error {
-public:
-	Error(const std::string& what, int code): std::runtime_error(what), e_code(code) {};
-	int code() { return e_code; }
-
-private:
-	int e_code;
-};
-
 namespace code {
-enum {
+enum Type {
 	Good = EXIT_SUCCESS, 
-	Bad = EXIT_FAILURE, 
+	Bad = EXIT_FAILURE, // Error class
+
 	SsmkErrorSpaceStart = 1400,
-	BadSourceDirectoryPath,
+
+	NoSpritesFound,
+
+	FileError, // class from Error
 	ConfigNotFound,
-	ParseError,
-	NotFileOrDirectory,
+	SourceDirectoryNotFound,
+	NotAFileOrDirectory,
+
+	TomlError, // class from FileError
+
+	ConfigError, // class from FileError
+	ConfigFieldError, // class from FileError
+	ConfigNoInputTable,
+	ConfigNoOutputTable,
+	ConfigNoInputFileArray,
+	ConfigNoOutputFile,
+	ConfigWrongFieldType, // class from FieldError
+
 	SsmkErrorSpaceEnd,
+};
+static const std::unordered_map<Type, const std::string> text = {
+	{ Good, "" },
+	{ Bad, "SSMK error"},
+
+	{ SsmkErrorSpaceStart, "SSMK error space start" },
+
+	{ NoSpritesFound, "no sprites found" },
+
+	{ FileError, "file error" },
+	{ ConfigNotFound, "config not found" },
+	{ SourceDirectoryNotFound, "source directory not found" },
+	{ NotAFileOrDirectory, "not a file or directory" },
+
+	{ TomlError, "Toml parse failed" },
+
+	{ ConfigError, "config error" },
+	{ ConfigFieldError, "filed error" },
+	{ ConfigNoInputTable, "input table not defined" },
+	{ ConfigNoOutputTable, "output table not defined" },
+	{ ConfigNoInputFileArray, "input file array not defined" },
+	{ ConfigNoOutputFile, "output file not specified" },
+	{ ConfigWrongFieldType, "field type" },
+
+	{ SsmkErrorSpaceEnd, "SSMK error space end" },
 };
 }
 
-class BadPath: public Error {
+class Error: public std::runtime_error {
 public:
-	BadPath(
+	Error(
+		const std::string& description, 
+		code::Type code = code::Bad,
+		const std::string& what = code::text.at(code::Bad)
+	): std::runtime_error(what), e_code(code), e_description(description) {};
+	code::Type code() { return e_code; }
+	const std::string& description() { return e_description; };
+
+private:
+	code::Type e_code;
+	std::string e_description;
+};
+
+class FileError: public Error {
+public:
+	FileError(
 		const std::filesystem::path& path,
-		const std::string& what = "Bad path", 
-		int code = EXIT_FAILURE
-	): Error(what, code) {
-		e_path = path;
-	};
+		const std::string& description = code::text.at(code::FileError),
+		code::Type code = code::FileError,
+		const std::string& what = code::text.at(code::FileError)
+	): Error(description, code, what), e_path(path) {};
 	const std::filesystem::path& path() {
 		return e_path;
 	}
-
 private:
 	std::filesystem::path e_path;
 };
 
-#define PATHERROR(NAME, MSG) \
-class NAME: public BadPath { \
-public: \
-	NAME( \
-		const std::filesystem::path& path, \
-		const std::string& what = MSG, \
-		int code = code::NAME \
-	): BadPath(what, path, code) {} \
-};
-
-PATHERROR(BadSourceDirectoryPath, "Source directory does not exists")
-PATHERROR(ConfigNotFound, "Config file not found")
-PATHERROR(NotFileOrDirectory, "Path is not a file or directory")
-
-class ParseError: public Error {
+class TomlError: public FileError {
 public:
 	struct Position {
 		Position(std::size_t l = 0, std::size_t c = 0) {
@@ -72,45 +109,64 @@ public:
 	};
 
 public:
-	ParseError(
+	TomlError(
 		const std::filesystem::path& path,
-		const std::string& what = "Parse error", 
-		Position begin = {}, Position end = {},
-		int code = code::ParseError
-	): Error(what, code), 
-		e_path(path),
+		Position begin, Position end,
+		const std::string& description,
+		code::Type code = code::TomlError,
+		const std::string& what = code::text.at(code::TomlError)
+	): FileError(path, description, code, what), 
 		e_begin(begin), 
 		e_end(end) {};
-	const std::filesystem::path& path() {
-		return e_path;
-	}
 	const Position& begin() { return e_begin; }
 	const Position& end() { return e_end; }
 
 private:
 	Position e_begin, e_end;
-	std::filesystem::path e_path;
 };
 
-#define PARSEERROR(NAME, MSG) \
-class NAME: public ParseError { \
-public: \
-	NAME( \
-		const std::filesystem::path& path, \
-		Position begin = {}, Position end = {}, \
-		const std::string& what = #MSG,  \
-		int code = code::ParseError \
-	): ParseError(path, what, begin, end, code) {} \
-}
+class ConfigError: public FileError {
+public:
+	ConfigError(
+		const std::filesystem::path& path,
+		const std::string& description = code::text.at(code::ConfigError),
+		code::Type code = code::ConfigError,
+		const std::string& what = code::text.at(code::ConfigError)
+	): FileError(path, description, code, what) {};
+};
 
-PARSEERROR(NoInputTable, "Input table not defined");
-PARSEERROR(NoFileArray, "No input file array defined");
-PARSEERROR(NotHomogeneousArray, "Array is not homogeneous");
-PARSEERROR(NoOutputTable, "Output table is not defined");
-PARSEERROR(NoOutputFile, "Output file is not defined");
+class ConfigFieldError: public ConfigError {
+public:
+	ConfigFieldError(
+		const std::filesystem::path& path,
+		const std::string& field,
+		const std::string& description = code::text.at(code::ConfigFieldError),
+		code::Type code = code::ConfigFieldError,
+		const std::string& what = code::text.at(code::ConfigFieldError)
+	): ConfigError(path, description, code, what), e_field(field) {};
+	const std::string& field() { return e_field; };
+private:
+	std::string e_field;
+};
 
-#undef PATHERROR
-#undef PARSEERROR
+class ConfigWrongFieldType: public ConfigFieldError {
+public:
+	ConfigWrongFieldType(
+		const std::filesystem::path& path,
+		const std::string& field,
+		const std::string& type,
+		const std::string& expectedType,
+		const std::string& description = code::text.at(code::ConfigWrongFieldType),
+		code::Type code = code::ConfigFieldError,
+		const std::string& what = code::text.at(code::ConfigFieldError)
+	): ConfigFieldError(path, description, field, code, what), 
+		e_type(type), e_expectedType(expectedType) {};
+	std::string& type() { return e_type; }
+	std::string& expectedType() { return e_expectedType; }
+private:
+	std::string e_expectedType;
+	std::string e_type;
+};
 
 }
 

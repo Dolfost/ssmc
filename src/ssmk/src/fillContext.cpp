@@ -8,12 +8,12 @@
 
 namespace sm {
 
-#define THROW_TOML_EX(E) \
-throw sm::ex::E( \
+#define RETHROW_TOML_EX() \
+throw sm::ex::TomlError( \
 	context.configFile, \
-	std::string(ex.description()), \
 	{ ex.source().begin.line, ex.source().begin.column }, \
-	{ ex.source().begin.line, ex.source().begin.column } \
+	{ ex.source().begin.line, ex.source().begin.column }, \
+	std::string(ex.description()) \
 );
 
 #define THROW_TOML(E, OBJ) \
@@ -27,7 +27,7 @@ void Ssmk::fillContext(sm::Context& context) {
 	context.sourceDirectory = 
 		std::filesystem::absolute(context.sourceDirectory);
 	if (not std::filesystem::is_directory(context.sourceDirectory))
-		throw sm::ex::BadSourceDirectoryPath(context.sourceDirectory);
+		SM_EX_THROW(FileError, SourceDirectoryNotFound, context.sourceDirectory)
 
 	for (const auto& filename: configFilenames) {
 		if (std::filesystem::is_regular_file(context.sourceDirectory / filename)) {
@@ -36,45 +36,49 @@ void Ssmk::fillContext(sm::Context& context) {
 		}
 	}
 	if (context.configFile.empty())
-		throw sm::ex::ConfigNotFound(context.sourceDirectory);
+		SM_EX_THROW(FileError, ConfigNotFound, context.configFile)
 
 	toml::table table;
 	try {
 		table = toml::parse_file(context.configFile.string());
 	} catch (const toml::parse_error& ex) {
-		THROW_TOML_EX(ParseError)
+		RETHROW_TOML_EX()
 	}
 
 	toml::table* inputTable = table["input"].as_table();
 	if (not inputTable)
-		throw sm::ex::NoInputTable(context.configFile);
+		SM_EX_THROW(ConfigFieldError, ConfigNoInputTable, context.configFile, "input")
 
 
 	toml::array* filesArray = (*inputTable)["files"].as_array();
 	if (not filesArray)
-		throw sm::ex::NoFileArray(context.configFile);
-	if (filesArray->is_homogeneous<std::string>()) {
-		std::filesystem::path path;
-		for (const auto& e: *filesArray) {
-			path = context.sourceDirectory / e.as_string()->get();
+		SM_EX_THROW(ConfigFieldError, ConfigNoInputFileArray, context.configFile, "input.files")
+	filesArray->for_each([&context](auto&& e) {
+		if constexpr (toml::is_string<decltype(e)>) {
+			std::filesystem::path path = e.as_string()->get();
+			if (path.is_relative())
+				path = context.sourceDirectory / path;
 			if (not (std::filesystem::is_regular_file(path) or std::filesystem::is_directory(path)))
-				throw sm::ex::NotFileOrDirectory(path);
+				SM_EX_THROW(ConfigFieldError, NotAFileOrDirectory, path, "input.files")
+
 			context.inputFiles.push_back(path);
+		} else {
+			SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.configFile, "input.files", "array", "array<string>")
 		}
-	} else THROW_TOML(NotHomogeneousArray, filesArray)
+	});
 
 	toml::table* outputTable = table["output"].as_table();
 	if (not outputTable)
-		throw sm::ex::NoInputTable(context.configFile);
+		SM_EX_THROW(ConfigFieldError, ConfigNoOutputTable, context.configFile, "output")
 
 	std::optional<std::string_view> outputFile = (*outputTable)["file"].value<std::string_view>();
 	if (not outputFile)
-		throw sm::ex::NoOutputFile(context.configFile);
+		SM_EX_THROW(ConfigFieldError, ConfigNoOutputFile, context.configFile, "output.file")
 
 	context.outputFile = context.sourceDirectory / *outputFile;
 }
 
 #undef THROW_TOML 
-#undef THROW_TOML_EX
+#undef RETHROW_TOML_EX
 
 }

@@ -24,6 +24,10 @@ void Ssmk::findFiles() {
 			SSMK_ADD_SPRITE(in)
 		}
 	}
+	if (context.sprites.empty())
+		SM_EX_THROW(Error, NoSpritesFound)
+	if (s_filesFoundCallback)
+		s_filesFoundCallback({*this, context.sprites});
 }
 
 #undef SSMK_ADD_SPRITE

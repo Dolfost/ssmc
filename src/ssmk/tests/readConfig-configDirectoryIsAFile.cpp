@@ -7,8 +7,8 @@ int main(int argc, char** argv) {
 	s.context.sourceDirectory = TESTPATH "/" TESTFILE;
 	try {
 		s.readConfig();
-	} catch (sm::ex::BadPath& ex) {
-		std::cout << ex.what() << " " << ex.path() << std::endl;
+	} catch (sm::ex::FileError& ex) {
+		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
 		return sm::ex::code::Good;
 	}
 
