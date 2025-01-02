@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::Ssmk s;
-	s.context.sourceDirectory = TESTPATH "/" TESTFILE;
+	s.context.config.directory = TESTPATH "/" TESTFILE;
 	try {
 		s.readConfig();
 	} catch (sm::ex::FileError& ex) {

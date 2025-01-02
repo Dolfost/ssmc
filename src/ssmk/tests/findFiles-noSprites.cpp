@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::Ssmk s;
-	s.context.sourceDirectory = TESTPATH "/projects/nosprites" ;
+	s.context.config.directory = TESTPATH "/projects/nosprites" ;
 	try {
 		s.readConfig();
 		s.findFiles();
@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 	}
 
 	std::cout << "sprites:\n";
-	for (auto const& x : s.context.sprites) {
+	for (auto const& x : s.context.im.sprites) {
 		std::cout << '\t' << x << '\n';
 	}
 	

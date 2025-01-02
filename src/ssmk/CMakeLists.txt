@@ -14,6 +14,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tomlplusplus)
 
+find_package(PNG REQUIRED)
+
 project(ssmk
 	LANGUAGES CXX
 	VERSION 0.1.1.0
@@ -23,8 +25,11 @@ project(ssmk
 
 add_library(sm_ssmk 
 	src/readConfig.cpp
-	src/fillContext.cpp
 	src/findFiles.cpp
+	src/readImageHeaders.cpp
+	# miscellaneous
+	src/sprite.cpp
+	src/fillContext.cpp
 )
 add_library(sm::ssmk ALIAS sm_ssmk)
 
@@ -48,6 +53,7 @@ target_sources(sm_ssmk
 
 target_link_libraries(sm_ssmk
 	tomlplusplus::tomlplusplus 
+	PNG::PNG
 	ca::optim
 )
 

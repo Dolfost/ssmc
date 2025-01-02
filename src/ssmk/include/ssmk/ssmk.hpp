@@ -51,7 +51,7 @@ public:
 		const std::vector<Sprite>& images;
 	)
 
-	void readImageHeaders() {};
+	void readImageHeaders();
 	CALLBACK(
 		imageHeaderRead,
 		const Sprite& image;

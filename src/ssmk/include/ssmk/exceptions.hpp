@@ -29,6 +29,13 @@ enum Type {
 	SourceDirectoryNotFound,
 	NotAFileOrDirectory,
 
+	PngError, // class from FileError
+	PngFailedToOpenForReading,
+	PngFailedToOpenForWritting,
+	PngBadSignature,
+	PngCouldNotCreateReadStructure,
+	PngCouldNotCreateInfoStructure,
+
 	TomlError, // class from FileError
 
 	ConfigError, // class from FileError
@@ -54,7 +61,14 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ SourceDirectoryNotFound, "source directory not found" },
 	{ NotAFileOrDirectory, "not a file or directory" },
 
-	{ TomlError, "Toml parse failed" },
+	{ PngError, "png error" },
+	{ PngFailedToOpenForReading, "failed to open image for reading" },
+	{ PngFailedToOpenForWritting, "failed to open image for writting" },
+	{ PngBadSignature, "image signature does not match a png" },
+	{ PngCouldNotCreateReadStructure, "could not create read structure" },
+	{ PngCouldNotCreateInfoStructure, "could not create info structure" },
+
+	{ TomlError, "toml parse failed" },
 
 	{ ConfigError, "config error" },
 	{ ConfigFieldError, "filed error" },
@@ -96,6 +110,16 @@ public:
 	}
 private:
 	std::filesystem::path e_path;
+};
+
+class PngError: public FileError {
+public:
+	PngError(
+		const std::filesystem::path& path,
+		const std::string& description = code::text.at(code::PngError),
+		code::Type code = code::FileError,
+		const std::string& what = code::text.at(code::PngError)
+	): FileError(path, description, code, what) {};
 };
 
 class TomlError: public FileError {

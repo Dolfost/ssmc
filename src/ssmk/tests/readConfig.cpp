@@ -3,7 +3,7 @@
 
 int main(int argc, char** argv) {
 	sm::Ssmk s;
-	s.context.sourceDirectory = TESTPATH "/projects/ex1";
+	s.context.config.directory = TESTPATH "/projects/ex1";
 	try {
 		s.readConfig();
 	} catch (std::exception& ex) {

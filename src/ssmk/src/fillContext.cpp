@@ -10,7 +10,7 @@ namespace sm {
 
 #define RETHROW_TOML_EX() \
 throw sm::ex::TomlError( \
-	context.configFile, \
+	context.config.file, \
 	{ ex.source().begin.line, ex.source().begin.column }, \
 	{ ex.source().begin.line, ex.source().begin.column }, \
 	std::string(ex.description()) \
@@ -24,58 +24,58 @@ throw sm::ex::E( \
 );
 
 void Ssmk::fillContext(sm::Context& context) {
-	context.sourceDirectory = 
-		std::filesystem::absolute(context.sourceDirectory);
-	if (not std::filesystem::is_directory(context.sourceDirectory))
-		SM_EX_THROW(FileError, SourceDirectoryNotFound, context.sourceDirectory)
+	context.config.directory = 
+		std::filesystem::absolute(context.config.directory);
+	if (not std::filesystem::is_directory(context.config.directory))
+		SM_EX_THROW(FileError, SourceDirectoryNotFound, context.config.directory)
 
 	for (const auto& filename: configFilenames) {
-		if (std::filesystem::is_regular_file(context.sourceDirectory / filename)) {
-			context.configFile = context.sourceDirectory / filename;
+		if (std::filesystem::is_regular_file(context.config.directory / filename)) {
+			context.config.file = context.config.directory / filename;
 			break;
 		}
 	}
-	if (context.configFile.empty())
-		SM_EX_THROW(FileError, ConfigNotFound, context.configFile)
+	if (context.config.file.empty())
+		SM_EX_THROW(FileError, ConfigNotFound, context.config.file)
 
 	toml::table table;
 	try {
-		table = toml::parse_file(context.configFile.string());
+		table = toml::parse_file(context.config.file.string());
 	} catch (const toml::parse_error& ex) {
 		RETHROW_TOML_EX()
 	}
 
 	toml::table* inputTable = table["input"].as_table();
 	if (not inputTable)
-		SM_EX_THROW(ConfigFieldError, ConfigNoInputTable, context.configFile, "input")
+		SM_EX_THROW(ConfigFieldError, ConfigNoInputTable, context.config.file, "input")
 
 
 	toml::array* filesArray = (*inputTable)["files"].as_array();
 	if (not filesArray)
-		SM_EX_THROW(ConfigFieldError, ConfigNoInputFileArray, context.configFile, "input.files")
+		SM_EX_THROW(ConfigFieldError, ConfigNoInputFileArray, context.config.file, "input.files")
 	filesArray->for_each([&context](auto&& e) {
 		if constexpr (toml::is_string<decltype(e)>) {
 			std::filesystem::path path = e.as_string()->get();
 			if (path.is_relative())
-				path = context.sourceDirectory / path;
+				path = context.config.directory / path;
 			if (not (std::filesystem::is_regular_file(path) or std::filesystem::is_directory(path)))
 				SM_EX_THROW(ConfigFieldError, NotAFileOrDirectory, path, "input.files")
 
-			context.inputFiles.push_back(path);
+			context.input.files.push_back(path);
 		} else {
-			SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.configFile, "input.files", "array", "array<string>")
+			SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.config.file, "input.files", "array", "array<string>")
 		}
 	});
 
 	toml::table* outputTable = table["output"].as_table();
 	if (not outputTable)
-		SM_EX_THROW(ConfigFieldError, ConfigNoOutputTable, context.configFile, "output")
+		SM_EX_THROW(ConfigFieldError, ConfigNoOutputTable, context.config.file, "output")
 
 	std::optional<std::string_view> outputFile = (*outputTable)["file"].value<std::string_view>();
 	if (not outputFile)
-		SM_EX_THROW(ConfigFieldError, ConfigNoOutputFile, context.configFile, "output.file")
+		SM_EX_THROW(ConfigFieldError, ConfigNoOutputFile, context.config.file, "output.file")
 
-	context.outputFile = context.sourceDirectory / *outputFile;
+	context.output.file = context.config.directory / *outputFile;
 }
 
 #undef THROW_TOML 

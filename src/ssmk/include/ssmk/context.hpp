@@ -10,28 +10,42 @@
 namespace sm {
 
 struct Context {
-	std::vector<std::filesystem::path> inputFiles;
-	std::filesystem::path sourceDirectory;
-	std::filesystem::path configFile;
-	std::filesystem::path outputFile;
+	struct Config {
+		std::filesystem::path directory;
+		std::filesystem::path file;
+	} config;
 
-	std::vector<Sprite> sprites;
+	struct Input {
+		std::vector<std::filesystem::path> files;
+	} input;
+
+	struct Output {
+		std::filesystem::path file;
+	} output;
+
+	struct Intermediate {
+		int maxBitDepth;
+		int maxColorType;
+		std::vector<Sprite> sprites;
+	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
 		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
 		#define SV(PROP) \
 			os << #PROP ": \n"; \
 			for (const auto& r : c.PROP) { \
-				os << "\t" << r << '\n'; \
+				os << "  " << r << '\n'; \
 			}
 
-		SV(inputFiles)
+		SV(input.files)
 
-		S(sourceDirectory)
-		S(outputFile)
-		S(configFile)
+		S(config.directory)
+		S(output.file)
+		S(config.file)
 
-		SV(sprites)
+		SV(im.sprites)
+		S(im.maxBitDepth)
+		S(im.maxColorType)
 
 		return os;
 
