@@ -23,6 +23,9 @@ enum Type {
 	SsmkErrorSpaceStart = 1400,
 
 	NoSpritesFound,
+	NoPackingAlgorithm,
+	NoPackingMetric,
+	NotDecreasingTreeFitPacking,
 
 	FileError, // class from Error
 	ConfigNotFound,
@@ -47,10 +50,9 @@ enum Type {
 	ConfigWrongFieldType, // class from FieldError
 	ConfigUnexpectedFieldValue, // class from FieldError
 	ConfigUnknownPackingAlgorithm,
-	ConfigUnknownPackingOrder,
 	ConfigUnknownPackingMetric,
 	ConfigExclusiveFieldValues, // class from FieldError
-	ConfigDecreasingFirstFitPacking,
+	ConfigNotDecreasingTreeFitPacking,
 	
 	SsmkErrorSpaceEnd,
 };
@@ -61,6 +63,10 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ SsmkErrorSpaceStart, "SSMK error space start" },
 
 	{ NoSpritesFound, "no sprites found" },
+
+	{ NoPackingAlgorithm, "no packing algorithm" },
+	{ NoPackingMetric, "no packing metric" },
+	{ NotDecreasingTreeFitPacking, "increasing tree fit packing" },
 
 	{ FileError, "file error" },
 	{ ConfigNotFound, "config not found" },
@@ -85,10 +91,9 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ ConfigWrongFieldType, "unexpected type" },
 	{ ConfigUnexpectedFieldValue, "unexpected value" },
 	{ ConfigUnknownPackingAlgorithm, "unknown packing algorithm" },
-	{ ConfigUnknownPackingOrder, "unknown packing order" },
 	{ ConfigUnknownPackingMetric, "unknown packing metric" },
-	{ ConfigExclusiveFieldValues, "exclusive field values" },
-	{ ConfigDecreasingFirstFitPacking, "decreasing first fit packing if forbidden" },
+	{ ConfigExclusiveFieldValues, "exclusive values" },
+	{ ConfigNotDecreasingTreeFitPacking, "decreasing first fit packing if forbidden" },
 
 	{ SsmkErrorSpaceEnd, "SSMK error space end" },
 };
@@ -195,7 +200,7 @@ public:
 		const std::string& description = code::text.at(code::ConfigWrongFieldType),
 		code::Type code = code::ConfigFieldError,
 		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, description, field, code, what), 
+	): ConfigFieldError(path, field, description, code, what), 
 		e_type(type), e_expectedType(expectedType) {};
 	const std::string& type() { return e_type; }
 	const std::string& expectedType() { return e_expectedType; }
@@ -215,13 +220,23 @@ public:
 		const std::string& description = code::text.at(code::ConfigUnexpectedFieldValue),
 		code::Type code = code::ConfigFieldError,
 		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, description, field, code, what), 
+	): ConfigFieldError(path, field, description, code, what), 
 		e_value(value) {
 		for (const auto& [k, v]: expected) {
 			e_expected += k + ", ";
 		}
 		e_expected.erase(e_expected.size()-2, 2);
 	};
+	ConfigUnexpectedFieldValue(
+		const std::filesystem::path& path,
+		const std::string& field,
+		const std::string& value,
+		const std::string& expected,
+		const std::string& description = code::text.at(code::ConfigUnexpectedFieldValue),
+		code::Type code = code::ConfigFieldError,
+		const std::string& what = code::text.at(code::ConfigFieldError)
+	): ConfigFieldError(path, field, description, code, what), 
+		e_value(value), e_expected(expected) {};
 	const std::string& value() { return e_value; }
 	const std::string& expected() { return e_expected; }
 private:

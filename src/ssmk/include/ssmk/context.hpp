@@ -52,6 +52,7 @@ struct Context {
 				Area,
 			} metric = Metric::MaxSide;
 			const static std::unordered_map<std::string, Metric> metricText;
+			std::size_t k = 1;
 		} packing;
 	} output;
 
@@ -83,6 +84,7 @@ struct Context {
 		SE(output.packing.algorithm);
 		SE(output.packing.order);
 		SE(output.packing.metric);
+		S(output.packing.k);
 
 		S(config.file);
 

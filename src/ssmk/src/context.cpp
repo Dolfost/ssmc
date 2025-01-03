@@ -11,6 +11,7 @@ const std::unordered_map<std::string, Context::Output::Packing::Algorithm>
 
 const std::unordered_map<std::string, Context::Output::Packing::Order> 
 	Context::Output::Packing::orderText {
+	{ "none",       Context::Output::Packing::Order::None },
 	{ "decreasing", Context::Output::Packing::Order::Decreasing },
 	{ "increasing", Context::Output::Packing::Order::Increasing },
 };

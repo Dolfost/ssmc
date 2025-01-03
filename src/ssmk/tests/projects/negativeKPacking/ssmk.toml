@@ -1,5 +1,5 @@
 [input]
-files = [ 'png', 'test1.png', 'test2.png' ]
+files = [ 'png' ]
 
 [output]
 file = "file.png"
@@ -8,4 +8,4 @@ file = "file.png"
 algorithm = "nextFit"
 order = "decreasing"
 metric = "area"
-k = 2
+k = -2

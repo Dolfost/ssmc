@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
 	try {
 		s.readConfig();
 	} catch (sm::ex::ConfigExclusiveFieldValues& ex) {
-		return ex.code() == sm::ex::code::ConfigDecreasingFirstFitPacking ? sm::ex::code::Good : sm::ex::code::Bad;
+		return ex.code() == sm::ex::code::ConfigNotDecreasingTreeFitPacking ? sm::ex::code::Good : sm::ex::code::Bad;
 	}
 
 	std::cout << "General";

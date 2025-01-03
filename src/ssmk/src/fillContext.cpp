@@ -98,20 +98,12 @@ void Ssmk::fillContext(sm::Context& context) {
 		}
 		std::optional<std::string> order = (*packingTable)["order"].value<std::string>();
 		if (order) {
-			context.output.packing.order = 
-				Context::Output::Packing::Order::None;
 			for (const auto& [k, v]: Context::Output::Packing::orderText) {
 				if (k == *order) {
 					context.output.packing.order = v;
 					break;
 				}
 			}
-			if (context.output.packing.order == Context::Output::Packing::Order::None)
-				SM_EX_THROW(
-					ConfigUnexpectedFieldValue, ConfigUnknownPackingOrder,
-					context.config.file, "output.packing.order", *order,
-					Context::Output::Packing::orderText
-				)
 		}
 		std::optional<std::string> metric = (*packingTable)["metric"].value<std::string>();
 		if (metric) {
@@ -131,12 +123,25 @@ void Ssmk::fillContext(sm::Context& context) {
 				)
 		}
 		if (context.output.packing.algorithm == Context::Output::Packing::Algorithm::TreeFit and 
-			context.output.packing.order == Context::Output::Packing::Order::Increasing)
+			context.output.packing.order != Context::Output::Packing::Order::Decreasing)
 				SM_EX_THROW(
-					ConfigExclusiveFieldValues, ConfigDecreasingFirstFitPacking,
-					context.config.file, "output.packing.algorithm", "firstFit",
-					"output.packing.order", "decreasing"
+					ConfigExclusiveFieldValues, ConfigNotDecreasingTreeFitPacking,
+					context.config.file, "output.packing.algorithm", "treeFit",
+					"output.packing.order", *order
 				)
+		std::optional<long long> k = (*packingTable)["k"].value<long long>();
+		if (k) {
+			if (*k <= 0)
+				SM_EX_THROW(
+					ConfigUnexpectedFieldValue, 
+					ConfigUnexpectedFieldValue, 
+					context.config.file,
+					"output.packing.k",
+					std::to_string(*k),
+					std::string(">0")
+				);
+			context.output.packing.k = *k;
+		}
 	}
 }
 
