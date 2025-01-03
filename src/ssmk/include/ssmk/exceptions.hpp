@@ -83,7 +83,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ TomlError, "toml parse failed" },
 
 	{ ConfigError, "config error" },
-	{ ConfigFieldError, "filed error" },
+	{ ConfigFieldError, "field error" },
 	{ ConfigNoInputTable, "input table not defined" },
 	{ ConfigNoOutputTable, "output table not defined" },
 	{ ConfigNoInputFileArray, "input file array not defined" },

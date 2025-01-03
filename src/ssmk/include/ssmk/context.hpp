@@ -90,7 +90,7 @@ struct Context {
 
 		os << "im.sprites" ": \n";
 		for (const auto& r : c.im.sprites) {
-			os << "  " << *r << '\n';
+			os << "  " << *static_cast<Sprite*>(r) << '\n';
 		}
 		S(im.maxBitDepth);
 		S(im.maxColorType);
