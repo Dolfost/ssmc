@@ -45,7 +45,13 @@ enum Type {
 	ConfigNoInputFileArray,
 	ConfigNoOutputFile,
 	ConfigWrongFieldType, // class from FieldError
-
+	ConfigUnexpectedFieldValue, // class from FieldError
+	ConfigUnknownPackingAlgorithm,
+	ConfigUnknownPackingOrder,
+	ConfigUnknownPackingMetric,
+	ConfigExclusiveFieldValues, // class from FieldError
+	ConfigDecreasingFirstFitPacking,
+	
 	SsmkErrorSpaceEnd,
 };
 static const std::unordered_map<Type, const std::string> text = {
@@ -76,7 +82,13 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ ConfigNoOutputTable, "output table not defined" },
 	{ ConfigNoInputFileArray, "input file array not defined" },
 	{ ConfigNoOutputFile, "output file not specified" },
-	{ ConfigWrongFieldType, "field type" },
+	{ ConfigWrongFieldType, "unexpected type" },
+	{ ConfigUnexpectedFieldValue, "unexpected value" },
+	{ ConfigUnknownPackingAlgorithm, "unknown packing algorithm" },
+	{ ConfigUnknownPackingOrder, "unknown packing order" },
+	{ ConfigUnknownPackingMetric, "unknown packing metric" },
+	{ ConfigExclusiveFieldValues, "exclusive field values" },
+	{ ConfigDecreasingFirstFitPacking, "decreasing first fit packing if forbidden" },
 
 	{ SsmkErrorSpaceEnd, "SSMK error space end" },
 };
@@ -185,14 +197,59 @@ public:
 		const std::string& what = code::text.at(code::ConfigFieldError)
 	): ConfigFieldError(path, description, field, code, what), 
 		e_type(type), e_expectedType(expectedType) {};
-	std::string& type() { return e_type; }
-	std::string& expectedType() { return e_expectedType; }
+	const std::string& type() { return e_type; }
+	const std::string& expectedType() { return e_expectedType; }
 private:
 	std::string e_expectedType;
 	std::string e_type;
 };
 
-}
+class ConfigUnexpectedFieldValue: public ConfigFieldError {
+public:
+	template<class T>
+	ConfigUnexpectedFieldValue(
+		const std::filesystem::path& path,
+		const std::string& field,
+		const std::string& value,
+		const T& expected,
+		const std::string& description = code::text.at(code::ConfigUnexpectedFieldValue),
+		code::Type code = code::ConfigFieldError,
+		const std::string& what = code::text.at(code::ConfigFieldError)
+	): ConfigFieldError(path, description, field, code, what), 
+		e_value(value) {
+		for (const auto& [k, v]: expected) {
+			e_expected += k + ", ";
+		}
+		e_expected.erase(e_expected.size()-2, 2);
+	};
+	const std::string& value() { return e_value; }
+	const std::string& expected() { return e_expected; }
+private:
+	std::string e_value;
+	std::string e_expected;
+};
 
+class ConfigExclusiveFieldValues: public ConfigFieldError {
+public:
+	ConfigExclusiveFieldValues(
+		const std::filesystem::path& path,
+		const std::string& field1,
+		const std::string& value1,
+		const std::string& field2,
+		const std::string& value2,
+		const std::string& description = code::text.at(code::ConfigExclusiveFieldValues),
+		code::Type code = code::ConfigFieldError,
+		const std::string& what = code::text.at(code::ConfigFieldError)
+	): ConfigFieldError(path, description, field1, code, what), 
+		e_value1(value1) {};
+	const std::string& value1() { return e_value1; }
+	const std::string& value2() { return e_value2; }
+	const std::string& field1() { return field(); }
+	const std::string& field2() { return e_field2; }
+private:
+	std::string e_value1, e_value2, e_field2;
+};
+
+}
 
 #endif // !_SSMK_SSMK_EXCEPTIONS_HPP_

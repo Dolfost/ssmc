@@ -3,3 +3,6 @@ files = [ 'png', 'test1.png', 'test2.png' ]
 
 [output]
 file = "file.png"
+
+[output.packing]
+algorithm = "nextFit"

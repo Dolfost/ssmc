@@ -1,0 +1,9 @@
+[input]
+files = [ 'png' ]
+
+[output]
+file = "file.png"
+
+[output.packing]
+algorithm = "treeFit"
+order = "increasing"

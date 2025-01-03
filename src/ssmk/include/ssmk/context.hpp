@@ -6,6 +6,13 @@
 #include <vector>
 #include <ostream>
 #include <filesystem>
+#include <string>
+#include <unordered_map>
+#include <type_traits>
+
+namespace ca::optim {
+template<typename T> class Box2D;
+}
 
 namespace sm {
 
@@ -21,37 +28,77 @@ struct Context {
 
 	struct Output {
 		std::filesystem::path file;
+		struct Packing {
+			enum class Algorithm {
+				None,
+				FirstFit,
+				NextFit,
+				TreeFit,
+			} algorithm = Algorithm::TreeFit;
+			const static std::unordered_map<std::string, Algorithm> algorithmText;
+			enum class Order {
+				None,
+				Decreasing,
+				Increasing
+			} order = Order::Decreasing;
+			const static std::unordered_map<std::string, Order> orderText;
+			enum class Metric {
+				None,
+				Width,
+				Height,
+				MaxSide,
+				MinSide,
+				Perimeter,
+				Area,
+			} metric = Metric::MaxSide;
+			const static std::unordered_map<std::string, Metric> metricText;
+		} packing;
 	} output;
 
 	struct Intermediate {
 		int maxBitDepth;
 		int maxColorType;
-		std::vector<Sprite> sprites;
+		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
+		~Intermediate() {
+			for (auto ptr: sprites) {
+				delete ptr;
+			}
+		}
 	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
 		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
+		#define SE(PROP) os << #PROP ": " << static_cast<std::underlying_type<decltype(c.PROP)>::type>(c.PROP) << std::endl;
 		#define SV(PROP) \
-			os << #PROP ": \n"; \
-			for (const auto& r : c.PROP) { \
-				os << "  " << r << '\n'; \
-			}
+		os << #PROP ": \n"; \
+		for (const auto& r : c.PROP) { \
+			os << "  " << r << '\n'; \
+		}
 
-		SV(input.files)
+		SV(input.files);
 
-		S(config.directory)
-		S(output.file)
-		S(config.file)
+		S(config.directory);
+		S(output.file);
 
-		SV(im.sprites)
-		S(im.maxBitDepth)
-		S(im.maxColorType)
+		SE(output.packing.algorithm);
+		SE(output.packing.order);
+		SE(output.packing.metric);
+
+		S(config.file);
+
+		os << "im.sprites" ": \n";
+		for (const auto& r : c.im.sprites) {
+			os << "  " << *r << '\n';
+		}
+		S(im.maxBitDepth);
+		S(im.maxColorType);
 
 		return os;
 
 		#undef S
 		#undef SV
 	}
+
 };
 
 }

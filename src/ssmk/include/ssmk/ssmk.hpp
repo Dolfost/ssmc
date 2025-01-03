@@ -6,21 +6,17 @@
 
 #include <functional>
 
-#define CALLBACK(NAME, CALLFIELDS) \
-	public: \
-		struct Callback##NAME##Info: CallbackInfo { \
-			CALLFIELDS \
-		}; \
+#define CALLBACK(NAME, ...) \
 	private: \
-		std::function<void(const Callback##NAME##Info&)> s_##NAME##Callback; \
+		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)> s_##NAME##Callback; \
 	public: \
-		void NAME##Callback(const std::function<void(const Callback##NAME##Info&)>& callback) { \
+		void NAME##Callback(const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
 			s_##NAME##Callback = callback; \
 		} \
-		const std::function<void(const Callback##NAME##Info&)>& NAME##Callback() const { \
+		const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##Callback() const { \
 			return s_##NAME##Callback; \
 		} \
-		std::function<void(const Callback##NAME##Info&)>& NAME##Callback() { \
+		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##Callback() { \
 			return s_##NAME##Callback; \
 		}
 
@@ -39,70 +35,54 @@ public:
 
 public:
 	void readConfig();
-	CALLBACK(configRead,)
+	CALLBACK(configRead)
 
 	void findFiles();
 	CALLBACK(
-		fileFound, 
-		const Sprite& image;
+		fileFound
 	)
 	CALLBACK(
-		filesFound, 
-		const std::vector<Sprite>& images;
+		filesFound
 	)
 
 	void readImageHeaders();
 	CALLBACK(
 		imageHeaderRead,
-		const Sprite& image;
-		std::size_t headerNo;
-		std::size_t headerCount;
+		std::size_t image
 	)
 	CALLBACK(
 	imageHeadersRead,
-		const std::vector<Sprite>& images;
 	)
 
-	void packImages() {};
+	void packImages();
 	CALLBACK(
 		imagePacked,
-		const Sprite& image;
-		std::size_t imageCount;
-		std::size_t imageNo;
+		std::size_t imageNo
 	)
 	CALLBACK(
-		imagesPacked,
-		const std::vector<Sprite>& images;
+		imagesPacked
 	)
 
 	void writeImages() {};
 	CALLBACK(
 		imageRowWritten,
-		const Sprite& image;
-		std::size_t rowCount;
-		std::size_t rowNo;
+		std::size_t row
 	)
 	CALLBACK(
 		imageWritten,
-		const Sprite& image;
-		std::size_t imageCount;
-		std::size_t imageNo;
+		std::size_t image
 	)
 	CALLBACK(
-		imagesWritten,
-		const std::vector<Sprite>& images;
+		imagesWritten
 	)
 
 	void writeSheetInfo() {};
 	CALLBACK(
 		sheetEntryWritten,
-		const Sprite& image;
-		std::size_t spriteCount;
-		std::size_t spriteNo;
+		std::size_t sprite
 	)
 	CALLBACK(
-		sheetInfoWritten,
-		const std::vector<Sprite>& images;
+		sheetInfoWritten
 	)
 
 public:

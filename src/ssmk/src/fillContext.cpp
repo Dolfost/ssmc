@@ -71,11 +71,73 @@ void Ssmk::fillContext(sm::Context& context) {
 	if (not outputTable)
 		SM_EX_THROW(ConfigFieldError, ConfigNoOutputTable, context.config.file, "output")
 
-	std::optional<std::string_view> outputFile = (*outputTable)["file"].value<std::string_view>();
+	std::optional<std::string> outputFile = (*outputTable)["file"].value<std::string>();
 	if (not outputFile)
 		SM_EX_THROW(ConfigFieldError, ConfigNoOutputFile, context.config.file, "output.file")
 
 	context.output.file = context.config.directory / *outputFile;
+
+	toml::table* packingTable = (*outputTable)["packing"].as_table();
+	if (packingTable) {
+		std::optional<std::string> algorithm = (*packingTable)["algorithm"].value<std::string>();
+		if (algorithm) {
+			context.output.packing.algorithm = 
+				Context::Output::Packing::Algorithm::None;
+			for (const auto& [k, v]: Context::Output::Packing::algorithmText) {
+				if (k == *algorithm) {
+					context.output.packing.algorithm = v;
+					break;
+				}
+			}
+			if (context.output.packing.algorithm == Context::Output::Packing::Algorithm::None)
+				SM_EX_THROW(
+					ConfigUnexpectedFieldValue, ConfigUnknownPackingAlgorithm,
+					context.config.file, "output.packing.algorithm", *algorithm,
+					Context::Output::Packing::algorithmText
+				)
+		}
+		std::optional<std::string> order = (*packingTable)["order"].value<std::string>();
+		if (order) {
+			context.output.packing.order = 
+				Context::Output::Packing::Order::None;
+			for (const auto& [k, v]: Context::Output::Packing::orderText) {
+				if (k == *order) {
+					context.output.packing.order = v;
+					break;
+				}
+			}
+			if (context.output.packing.order == Context::Output::Packing::Order::None)
+				SM_EX_THROW(
+					ConfigUnexpectedFieldValue, ConfigUnknownPackingOrder,
+					context.config.file, "output.packing.order", *order,
+					Context::Output::Packing::orderText
+				)
+		}
+		std::optional<std::string> metric = (*packingTable)["metric"].value<std::string>();
+		if (metric) {
+			context.output.packing.metric = 
+				Context::Output::Packing::Metric::None;
+			for (const auto& [k, v]: Context::Output::Packing::metricText) {
+				if (k == *metric) {
+					context.output.packing.metric = v;
+					break;
+				}
+			}
+			if (context.output.packing.metric == Context::Output::Packing::Metric::None)
+				SM_EX_THROW(
+					ConfigUnexpectedFieldValue, ConfigUnknownPackingMetric,
+					context.config.file, "output.packing.metric", *metric,
+					Context::Output::Packing::metricText
+				)
+		}
+		if (context.output.packing.algorithm == Context::Output::Packing::Algorithm::TreeFit and 
+			context.output.packing.order == Context::Output::Packing::Order::Increasing)
+				SM_EX_THROW(
+					ConfigExclusiveFieldValues, ConfigDecreasingFirstFitPacking,
+					context.config.file, "output.packing.algorithm", "firstFit",
+					"output.packing.order", "decreasing"
+				)
+	}
 }
 
 #undef THROW_TOML 
