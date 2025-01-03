@@ -65,6 +65,7 @@ struct Context {
 				delete ptr;
 			}
 		}
+		std::size_t width, height;
 	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
@@ -94,6 +95,8 @@ struct Context {
 		}
 		S(im.maxBitDepth);
 		S(im.maxColorType);
+		S(im.width);
+		S(im.height);
 
 		return os;
 

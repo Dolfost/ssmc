@@ -81,6 +81,10 @@ void Ssmk::packImages() {
 		);
 
 	packing->pack(context.im.sprites);
+	context.im.width = packing->size().width();
+	context.im.height = packing->size().height();
+
+	delete packing;
 
 	if (s_imagesPackedCallback)
 		s_imagesPackedCallback(*this);
