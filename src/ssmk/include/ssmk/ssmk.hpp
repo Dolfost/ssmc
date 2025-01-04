@@ -54,7 +54,7 @@ public:
 	imageHeadersRead,
 	)
 
-	void packImages();
+	void packSprites();
 	CALLBACK(
 		imagePacked,
 		std::size_t imageNo
@@ -63,18 +63,30 @@ public:
 		imagesPacked
 	)
 
-	void writeImages();
+	void writeSprites();
+	CALLBACK(
+		spriteRowWritten,
+		std::size_t sprite,
+		std::size_t row,
+		std::size_t pass,
+		std::size_t passes
+	)
+	CALLBACK(
+		spriteWritten,
+		std::size_t image
+	)
+	CALLBACK(
+		spritesWritten
+	)
 	CALLBACK(
 		imageRowWritten,
+		std::size_t sprite,
 		std::size_t row,
-		std::size_t image
+		std::size_t pass,
+		std::size_t passes
 	)
 	CALLBACK(
-		imageWritten,
-		std::size_t image
-	)
-	CALLBACK(
-		imagesWritten
+		imageWritten
 	)
 
 	void writeSheetInfo() {};
@@ -91,8 +103,8 @@ public:
 		readConfig();
 		findFiles();
 		readImageHeaders();
-		packImages();
-		writeImages();
+		packSprites();
+		writeSprites();
 		writeSheetInfo();
 	}
 

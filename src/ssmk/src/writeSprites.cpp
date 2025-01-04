@@ -9,7 +9,7 @@
 
 namespace sm {
 
-void Ssmk::writeImages() {
+void Ssmk::writeSprites() {
 	png_structp opng = nullptr;
 	png_infop oinfo = nullptr;
 

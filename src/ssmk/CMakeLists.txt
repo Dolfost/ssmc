@@ -4,7 +4,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/Dolfost/calgo.git
 
     # GIT_TAG v3.2.0.0
-    GIT_TAG 1718eabfb8a6eef753d0a9819fed8404ba6a392e
+    GIT_TAG f41d736435574dc55acbd09621b504c23affae62
 )
 FetchContent_MakeAvailable(calgo)
 FetchContent_Declare(
@@ -27,8 +27,8 @@ add_library(sm_ssmk
 	src/readConfig.cpp
 	src/findFiles.cpp
 	src/readImageHeaders.cpp
-	src/packImages.cpp
-	src/writeImages.cpp
+	src/packSprites.cpp
+	src/writeSprites.cpp
 	# miscellaneous
 	src/sprite.cpp
 	src/context.cpp
