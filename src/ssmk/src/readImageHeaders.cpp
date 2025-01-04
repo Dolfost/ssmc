@@ -82,6 +82,7 @@ void Ssmk::readImageHeaders() {
 
 		sprite->setSize({width, height});
 		sprite->png().pos = std::ftell(file);
+		png_init_io(sprite->png().image, nullptr);
 		std::fclose(file);
 
 		if (s_imageHeaderReadCallback)

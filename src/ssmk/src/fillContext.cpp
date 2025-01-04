@@ -125,7 +125,7 @@ void Ssmk::fillContext(sm::Context& context) {
 		if (context.output.packing.algorithm == Context::Output::Packing::Algorithm::TreeFit and 
 			context.output.packing.order != Context::Output::Packing::Order::Decreasing)
 				SM_EX_THROW(
-					ConfigExclusiveFieldValues, ConfigNotDecreasingTreeFitPacking,
+					ConfigExclusiveFieldValues, ConfigIncreasingTreeFitPacking,
 					context.config.file, "output.packing.algorithm", "treeFit",
 					"output.packing.order", *order
 				)

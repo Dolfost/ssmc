@@ -28,6 +28,7 @@ add_library(sm_ssmk
 	src/findFiles.cpp
 	src/readImageHeaders.cpp
 	src/packImages.cpp
+	src/writeImages.cpp
 	# miscellaneous
 	src/sprite.cpp
 	src/context.cpp

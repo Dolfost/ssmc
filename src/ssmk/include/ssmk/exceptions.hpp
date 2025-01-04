@@ -37,6 +37,7 @@ enum Type {
 	PngFailedToOpenForWritting,
 	PngBadSignature,
 	PngCouldNotCreateReadStructure,
+	PngCouldNotCreateWriteStructure,
 	PngCouldNotCreateInfoStructure,
 
 	TomlError, // class from FileError
@@ -52,7 +53,7 @@ enum Type {
 	ConfigUnknownPackingAlgorithm,
 	ConfigUnknownPackingMetric,
 	ConfigExclusiveFieldValues, // class from FieldError
-	ConfigNotDecreasingTreeFitPacking,
+	ConfigIncreasingTreeFitPacking,
 	
 	SsmkErrorSpaceEnd,
 };
@@ -78,6 +79,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ PngFailedToOpenForWritting, "failed to open image for writting" },
 	{ PngBadSignature, "image signature does not match a png" },
 	{ PngCouldNotCreateReadStructure, "could not create read structure" },
+	{ PngCouldNotCreateWriteStructure, "could not create write structure" },
 	{ PngCouldNotCreateInfoStructure, "could not create info structure" },
 
 	{ TomlError, "toml parse failed" },
@@ -93,7 +95,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ ConfigUnknownPackingAlgorithm, "unknown packing algorithm" },
 	{ ConfigUnknownPackingMetric, "unknown packing metric" },
 	{ ConfigExclusiveFieldValues, "exclusive values" },
-	{ ConfigNotDecreasingTreeFitPacking, "decreasing first fit packing if forbidden" },
+	{ ConfigIncreasingTreeFitPacking, "increasing first fit packing is forbidden" },
 
 	{ SsmkErrorSpaceEnd, "SSMK error space end" },
 };

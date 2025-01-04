@@ -63,10 +63,11 @@ public:
 		imagesPacked
 	)
 
-	void writeImages() {};
+	void writeImages();
 	CALLBACK(
 		imageRowWritten,
-		std::size_t row
+		std::size_t row,
+		std::size_t image
 	)
 	CALLBACK(
 		imageWritten,

@@ -5,7 +5,7 @@ files = [ 'png', 'test1.png', 'test2.png' ]
 file = "file.png"
 
 [output.packing]
-algorithm = "nextFit"
-order = "decreasing"
-metric = "area"
+algorithm = "firstFit"
+order = "increasing"
+metric = "height"
 k = 2

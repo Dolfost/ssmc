@@ -19,10 +19,17 @@ int Application::run(int argc, const char** argv) {
 
 	int code = EXIT_SUCCESS;
 
+	a_ssmk.imagesPackedCallback([](const Ssmk& sm) {
+		std::cout << "SSMK context (after packing):\n" << sm.context << std::endl;
+	});
+
 	try {
 		a_ssmk();
+	} catch (sm::ex::ConfigFieldError& ex) {
+		std::cerr << ex.what() << ": " << ex.description() << ": " << ex.field() << std::endl;
+		code = ex.code();
 	} catch (sm::ex::Error& ex) {
-		std::cerr << "SSMK Error: " << ex.what() << std::endl;
+		std::cerr << ex.what() << ": " << ex.description() << std::endl;
 		code = ex.code();
 	} catch (std::exception& ex) {
 		std::cerr << "Error: " << ex.what() << std::endl;
