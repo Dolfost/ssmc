@@ -6,7 +6,7 @@ namespace sm {
 
 Sprite::Png::~Png() {
 	png_destroy_read_struct(
-		&image, nullptr, nullptr
+		&image, &info, nullptr
 	);
 }
 

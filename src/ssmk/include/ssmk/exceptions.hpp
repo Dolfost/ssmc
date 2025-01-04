@@ -39,6 +39,9 @@ enum Type {
 	PngCouldNotCreateReadStructure,
 	PngCouldNotCreateWriteStructure,
 	PngCouldNotCreateInfoStructure,
+	PngCouldNotAllocateOutputRows,
+	PngSub8BitGrayscaleImage,
+	PngPalettedImage,
 
 	TomlError, // class from FileError
 
@@ -81,6 +84,9 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ PngCouldNotCreateReadStructure, "could not create read structure" },
 	{ PngCouldNotCreateWriteStructure, "could not create write structure" },
 	{ PngCouldNotCreateInfoStructure, "could not create info structure" },
+	{ PngCouldNotAllocateOutputRows, "could not allocate memory for output image" },
+	{ PngSub8BitGrayscaleImage, "grayscale images with bit depth < 8 is not supported" },
+	{ PngPalettedImage, "paletted images not supported" },
 
 	{ TomlError, "toml parse failed" },
 

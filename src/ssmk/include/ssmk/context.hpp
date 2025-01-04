@@ -54,11 +54,13 @@ struct Context {
 			const static std::unordered_map<std::string, Metric> metricText;
 			std::size_t k = 1;
 		} packing;
+		struct Png {
+		} png;
 	} output;
 
 	struct Intermediate {
-		int maxBitDepth;
-		int maxColorType;
+		int maxBitDepth = 0;
+		int maxColorType = 0;
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 		~Intermediate() {
 			for (auto ptr: sprites) {
