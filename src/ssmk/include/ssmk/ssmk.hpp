@@ -45,7 +45,7 @@ public:
 		filesFound
 	)
 
-	void readImageHeaders();
+	void readSpriteHeaders();
 	CALLBACK(
 		imageHeaderRead,
 		std::size_t image
@@ -63,7 +63,18 @@ public:
 		imagesPacked
 	)
 
-	void writeSprites();
+	void makeOutputPng();
+
+	void buildPngChunk();
+	CALLBACK(
+		pngChunkEntryWritten,
+		std::size_t sprite
+	)
+	CALLBACK(
+		pngChuckWritten
+	)
+
+	void copySprites();
 	CALLBACK(
 		spriteRowCopied,
 		std::size_t sprite,
@@ -78,6 +89,8 @@ public:
 	CALLBACK(
 		spritesCopied
 	)
+
+	void writePng();
 	CALLBACK(
 		imageRowWritten,
 		std::size_t row,
@@ -85,26 +98,19 @@ public:
 		std::size_t passes
 	)
 	CALLBACK(
-		imageWritten
-	)
-
-	void writeSheetInfo() {};
-	CALLBACK(
-		sheetEntryWritten,
-		std::size_t sprite
-	)
-	CALLBACK(
-		sheetInfoWritten
+		pngWritten
 	)
 
 public:
 	void operator()() {
 		readConfig();
 		findFiles();
-		readImageHeaders();
+		readSpriteHeaders();
 		packSprites();
-		writeSprites();
-		writeSheetInfo();
+		makeOutputPng();
+		copySprites();
+		buildPngChunk();
+		writePng();
 	}
 
 	static void fillContext(sm::Context& context);

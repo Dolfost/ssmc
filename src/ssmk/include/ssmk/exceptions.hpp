@@ -40,6 +40,7 @@ enum Type {
 	PngCouldNotCreateWriteStructure,
 	PngCouldNotCreateInfoStructure,
 	PngCouldNotAllocateOutputRows,
+	PngCouldNotAllocateBackgroundColor,
 	PngSub8BitGrayscaleImage,
 	PngPalettedImage,
 
@@ -87,6 +88,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ PngCouldNotCreateWriteStructure, "could not create write structure" },
 	{ PngCouldNotCreateInfoStructure, "could not create info structure" },
 	{ PngCouldNotAllocateOutputRows, "could not allocate memory for output image" },
+	{ PngCouldNotAllocateBackgroundColor, "could not allocate background color" },
 	{ PngPalettedImage, "paletted images not supported" },
 
 	{ TomlError, "toml parse failed" },

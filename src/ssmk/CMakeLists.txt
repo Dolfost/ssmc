@@ -26,9 +26,12 @@ project(ssmk
 add_library(sm_ssmk 
 	src/readConfig.cpp
 	src/findFiles.cpp
-	src/readImageHeaders.cpp
+	src/readSpriteHeaders.cpp
 	src/packSprites.cpp
-	src/writeSprites.cpp
+	src/makeOutputPng.cpp
+	src/copySprites.cpp
+	src/buildPngChunk.cpp
+	src/writePng.cpp
 	# miscellaneous
 	src/sprite.cpp
 	src/context.cpp

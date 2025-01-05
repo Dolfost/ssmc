@@ -68,16 +68,24 @@ struct Context {
 	} output;
 
 	struct Intermediate {
-		int maxBitDepth = 0;
+		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
+
 		bool isColor = 0;
 		bool isAlpha = 0;
-		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
+		std::size_t width, height; // output dimentions
+		void* png = nullptr;  // output png data structure
+		void* info = nullptr; // output png info structure
+		void* background = nullptr; // output png background structure
+		void* rows = nullptr; // output buffer
+		void* chunk = nullptr; // ssmk specific png chunk
+		int color = 0; // output color mode
+		int depth = 0; // output color depth
+
 		~Intermediate() {
 			for (auto ptr: sprites) {
 				delete ptr;
 			}
 		}
-		std::size_t width, height;
 	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
@@ -108,7 +116,7 @@ struct Context {
 		for (const auto& r : c.im.sprites) {
 			os << "  " << *static_cast<Sprite*>(r) << '\n';
 		}
-		S(im.maxBitDepth);
+		S(im.depth);
 		S(im.isColor);
 		S(im.width);
 		S(im.height);

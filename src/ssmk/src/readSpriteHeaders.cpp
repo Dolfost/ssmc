@@ -11,7 +11,7 @@
 
 namespace sm {
 
-void Ssmk::readImageHeaders() {
+void Ssmk::readSpriteHeaders() {
 	static const std::size_t sigLen = 8;
 	unsigned char signature[sigLen];
 	std::size_t spriteCount = context.im.sprites.size();
@@ -74,8 +74,8 @@ void Ssmk::readImageHeaders() {
 
 		context.im.isColor |= color & PNG_COLOR_MASK_COLOR;
 		context.im.isAlpha |= color & PNG_COLOR_MASK_ALPHA;
-		context.im.maxBitDepth = std::max(
-			context.im.maxBitDepth, depth
+		context.im.depth = std::max(
+			context.im.depth, depth
 		);
 
 		sprite->setSize({width, height});
