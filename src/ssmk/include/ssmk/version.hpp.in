@@ -11,6 +11,12 @@ struct {
 	const int minor = @ssmk_VERSION_MINOR@ + 0;
 	const int patch = @ssmk_VERSION_PATCH@ + 0;
 	const int tweak = @ssmk_VERSION_TWEAK@ + 0;
+	struct {
+		const char* chunk = "ssMk";
+		const char* key = "Software";
+		const char* versionKey = "ssmk Version";
+		const char* text = "ssmk";
+	} png;
 } version;
 
 }

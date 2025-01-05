@@ -1,5 +1,6 @@
 #include <ssmk/ssmk.hpp>
 #include <ssmk/exceptions.hpp>
+#include <ssmk/version.hpp>
 
 #include <cstdio>
 #include <cstring>
@@ -14,8 +15,8 @@ void Ssmk::writeSprites() {
 	png_infop oinfo = nullptr;
 
 	const int odepth = context.im.maxBitDepth;
-	const int ocolor = (context.im.maxColor ? PNG_COLOR_MASK_COLOR : 0) | 
-		(context.output.png.opaque ? 0 : (context.im.maxAlpha ? PNG_COLOR_MASK_ALPHA : 0));
+	const int ocolor = (context.im.isColor ? PNG_COLOR_MASK_COLOR : 0) | 
+		(context.output.png.opaque ? 0 : (context.im.isAlpha ? PNG_COLOR_MASK_ALPHA : 0));
 	int interlacing;
 	switch (context.output.png.interlacing) {
 		case Context::Output::Png::Interlacing::None:
@@ -70,6 +71,20 @@ void Ssmk::writeSprites() {
 		opng, context.output.png.compression
 	);
 
+	png_text text[2] { 
+		{
+			PNG_TEXT_COMPRESSION_NONE,
+			(char*)version.png.key,     // sorry
+			(char*)sm::version.png.text // sorry
+		},
+		{
+			PNG_TEXT_COMPRESSION_NONE,
+			(char*)version.png.versionKey,     // sorry
+			(char*)sm::version.full.c_str() // sorry
+		}
+	};
+	png_set_text(opng, oinfo, text, 2);
+
 	std::FILE* ofile = 
 		std::fopen(context.output.file.c_str(), "wb");
 	if (not ofile)
@@ -112,8 +127,8 @@ void Ssmk::writeSprites() {
 	std::FILE* ifile = nullptr;
 	for (int i = 0; i < spriteCount; i++) {
 		Sprite* const sprite = static_cast<Sprite*>(context.im.sprites[i]);
-		png_infop const info = sprite->png().info;
-		png_structp const png = sprite->png().image;
+		png_infop&   info = sprite->png().info;
+		png_structp& png = sprite->png().image;
 
 		ifile = std::fopen(sprite->path().c_str(), "rb");
 		if (not ifile)
@@ -142,8 +157,11 @@ void Ssmk::writeSprites() {
 		const bool alph = color & PNG_COLOR_MASK_ALPHA;
 
 		// transform image to output type
-		if (ocol and not col)
+		if (ocol and not col) {
+			if (depth < 8)
+				png_set_expand_gray_1_2_4_to_8(png);
 			png_set_gray_to_rgb(png);
+		}
 		if (oalph and not alph)
 			png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
 		if (alph and not oalph)

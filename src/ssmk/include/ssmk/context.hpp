@@ -69,8 +69,8 @@ struct Context {
 
 	struct Intermediate {
 		int maxBitDepth = 0;
-		bool maxColor = 0;
-		bool maxAlpha = 0;
+		bool isColor = 0;
+		bool isAlpha = 0;
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 		~Intermediate() {
 			for (auto ptr: sprites) {
@@ -109,7 +109,7 @@ struct Context {
 			os << "  " << *static_cast<Sprite*>(r) << '\n';
 		}
 		S(im.maxBitDepth);
-		S(im.maxColor);
+		S(im.isColor);
 		S(im.width);
 		S(im.height);
 

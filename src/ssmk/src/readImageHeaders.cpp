@@ -12,79 +12,75 @@
 namespace sm {
 
 void Ssmk::readImageHeaders() {
-	static const std::size_t signatureLength = 8;
-	unsigned char signature[signatureLength];
+	static const std::size_t sigLen = 8;
+	unsigned char signature[sigLen];
 	std::size_t spriteCount = context.im.sprites.size();
-	std::FILE* file;
+
+	std::FILE* file = nullptr;
 	for (std::size_t i = 0; i < spriteCount; i++) {
 		Sprite* const sprite = static_cast<Sprite*>(context.im.sprites[i]);
+		png_structp& png = sprite->png().image;
+		png_infop&   info = sprite->png().info;
 
 		if (not (file = std::fopen(sprite->path().c_str(), "rb")))
 			SM_EX_THROW(PngError, PngFailedToOpenForReading, sprite->path());
 
-		std::memset(signature, 0, signatureLength);
-		std::fread(signature, 1, signatureLength, file);
-		if (!png_check_sig(signature, 8)) {
+		std::memset(signature, 0, sigLen);
+		std::fread(signature, 1, sigLen, file);
+		if (not png_check_sig(signature, 8)) {
 			std::fclose(file);
 			SM_EX_THROW(PngError, PngBadSignature, sprite->path());
 		}
 
-		sprite->png().image = png_create_read_struct(
+		png = png_create_read_struct(
 			PNG_LIBPNG_VER_STRING,
 			nullptr, nullptr, nullptr
 		);
-		if (not sprite->png().image) {
+		if (not png) {
 			std::fclose(file);
 			SM_EX_THROW(PngError, PngCouldNotCreateReadStructure, sprite->path());
 		}
 
-		sprite->png().info = png_create_info_struct(
-			sprite->png().image
-		);
-		if (not sprite->png().info) {
+		info = png_create_info_struct(png);
+		if (not info) {
 			std::fclose(file);
 			SM_EX_THROW(PngError, PngCouldNotCreateInfoStructure, sprite->path());
 		}
 
-		png_init_io(sprite->png().image, file);
-		png_set_sig_bytes(sprite->png().image, signatureLength);
-		png_read_info(sprite->png().image, sprite->png().info);
+		png_init_io(png, file);
+		png_set_sig_bytes(png, sigLen);
+		png_read_info(png, info);
 
 		png_uint_32 width = 0, height = 0;
-		int bitDepth = 0, colorType = 0;
+		int depth = 0, color = 0;
 		png_get_IHDR(
-			sprite->png().image, sprite->png().info, 
-			&width, &height, &bitDepth, &colorType, 
+			png, info, 
+			&width, &height, &depth, &color, 
 			nullptr, nullptr, nullptr
 		);
 
 		// skip paletted images
-		if (colorType == PNG_COLOR_TYPE_PALETTE) {
+		if (color == PNG_COLOR_TYPE_PALETTE) {
 			std::fclose(file);
 			SM_EX_THROW(PngError, PngPalettedImage, sprite->path());
 		}
-		// skip grayscale images which color depth is < 8
-		if (bitDepth < 8 and not (colorType & PNG_COLOR_MASK_COLOR)) {
-			std::fclose(file);
-			SM_EX_THROW(PngError, PngSub8BitGrayscaleImage, sprite->path());
-		}
 
 		const bool tRNS = png_get_valid(
-			sprite->png().image, sprite->png().info,
+			png, info,
 			PNG_INFO_tRNS
 		);
 		if (tRNS)
-			colorType |= PNG_COLOR_MASK_ALPHA;
+			color |= PNG_COLOR_MASK_ALPHA;
 
-		context.im.maxColor |= colorType & PNG_COLOR_MASK_COLOR;
-		context.im.maxAlpha |= colorType & PNG_COLOR_MASK_ALPHA;
+		context.im.isColor |= color & PNG_COLOR_MASK_COLOR;
+		context.im.isAlpha |= color & PNG_COLOR_MASK_ALPHA;
 		context.im.maxBitDepth = std::max(
-			context.im.maxBitDepth, bitDepth
+			context.im.maxBitDepth, depth
 		);
 
 		sprite->setSize({width, height});
 		sprite->png().pos = std::ftell(file);
-		png_init_io(sprite->png().image, nullptr);
+		png_init_io(png, nullptr);
 		std::fclose(file);
 
 		if (s_imageHeaderReadCallback)
