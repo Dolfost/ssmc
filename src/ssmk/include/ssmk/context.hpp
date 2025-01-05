@@ -80,12 +80,7 @@ struct Context {
 		void* chunk = nullptr; // ssmk specific png chunk
 		int color = 0; // output color mode
 		int depth = 0; // output color depth
-
-		~Intermediate() {
-			for (auto ptr: sprites) {
-				delete ptr;
-			}
-		}
+		~Intermediate();
 	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const Context& c) {

@@ -1,5 +1,7 @@
 #include <ssmk/context.hpp>
 
+#include <png.h>
+
 namespace sm {
 
 const std::unordered_map<std::string, Context::Output::Packing::Algorithm> 
@@ -31,4 +33,17 @@ const std::unordered_map<std::string, Context::Output::Png::Interlacing>
 	{ "none",     Context::Output::Png::Interlacing::None },
 	{ "adam7",     Context::Output::Png::Interlacing::Adam7 },
 };
+
+Context::Intermediate::~Intermediate() {
+	for (auto ptr: sprites)
+		delete ptr;
+	if (rows != nullptr)
+		for (std::size_t i = 0; i < height; i++)
+			delete ((png_bytepp)rows)[i];
+	delete (png_bytepp)rows; 
+	png_structp& p = (png_structp&)png;
+	png_infop& i = (png_infop&)info;
+	png_destroy_write_struct(&p, &i);
+}
+
 }
