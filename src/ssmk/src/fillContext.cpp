@@ -179,7 +179,7 @@ void Ssmk::fillContext(sm::Context& context) {
 							ConfigNotRGB, 
 							context.config.file, 
 							"output.png.background", 
-							std::to_string(e.get()), std::string("0 <= a <= 1")
+							std::to_string(e.get()), std::string("[0;1]")
 						)
 					}
 					context.output.png.background[idx++] = e.get();
@@ -187,6 +187,18 @@ void Ssmk::fillContext(sm::Context& context) {
 					SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.config.file, "output.png.background", "array", "array<doublg>")
 				}
 			});
+		}
+		std::optional<int> compression = (*pngTable)["compression"].value<int>();
+		if (compression)  {
+			if (*compression < 0 or *compression > 9)
+				SM_EX_THROW(
+					ConfigUnexpectedFieldValue, 
+					ConfigUnknownCompressionLevel, 
+					context.config.file, 
+					"output.png.compression", 
+					std::to_string(*compression), std::string("[0;9]")
+				)
+					context.output.png.compression = *compression;
 		}
 
 	}

@@ -63,6 +63,7 @@ struct Context {
 			} interlacing = Interlacing::None;
 			const static std::unordered_map<std::string, Interlacing> interlacingText;
 			std::array<double, 3> background = {0, 0, 0};
+			int compression = -1;
 		} png;
 	} output;
 

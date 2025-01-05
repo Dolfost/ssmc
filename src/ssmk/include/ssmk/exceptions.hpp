@@ -56,6 +56,7 @@ enum Type {
 	ConfigUnknownPackingAlgorithm,
 	ConfigUnknownPackingMetric,
 	ConfigNotRGB,
+	ConfigUnknownCompressionLevel,
 	ConfigExclusiveFieldValues, // class from FieldError
 	ConfigIncreasingTreeFitPacking,
 	
@@ -104,6 +105,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ ConfigNotRGB, "invalid RGB value" },
 	{ ConfigExclusiveFieldValues, "exclusive values" },
 	{ ConfigIncreasingTreeFitPacking, "increasing first fit packing is forbidden" },
+	{ ConfigUnknownCompressionLevel, "unknown compression level" },
 
 	{ SsmkErrorSpaceEnd, "SSMK error space end" },
 };

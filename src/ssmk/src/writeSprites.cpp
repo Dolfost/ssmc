@@ -48,7 +48,7 @@ void Ssmk::writeSprites() {
 	);
 
 	png_color_16 bkgd;
-	int max = 1 << odepth;
+	int max = 1 << odepth; // max pixel component value
 	if (ocolor & PNG_COLOR_MASK_COLOR) {
 		bkgd.red =   max*context.output.png.background[0];
 		bkgd.green = max*context.output.png.background[1];
@@ -65,6 +65,10 @@ void Ssmk::writeSprites() {
 			opng, oinfo,
 			&bkgd
 		);
+
+	png_set_compression_level(
+		opng, context.output.png.compression
+	);
 
 	std::FILE* ofile = 
 		std::fopen(context.output.file.c_str(), "wb");
