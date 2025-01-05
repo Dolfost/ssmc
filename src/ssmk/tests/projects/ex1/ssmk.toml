@@ -7,4 +7,4 @@ file = "file.png"
 [output.packing]
 algorithm = "treeFit"
 order = "decreasing"
-metric = "height"
+metric = "width"

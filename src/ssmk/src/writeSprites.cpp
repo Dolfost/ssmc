@@ -114,15 +114,33 @@ void Ssmk::writeSprites() {
 			png_set_expand_16(png);
 
 		png_read_update_info(sprite->png().image, sprite->png().info);
-		int passes = png_set_interlace_handling(sprite->png().image);
 
-		for (std::size_t p = 0; p < passes; p++)
-			for (std::size_t r = 0; r < sprite->size().height(); r++)
-				png_read_row(
-					sprite->png().image, 
-					orows[sprite->y() + r] + sprite->x()*pixelSize, 
-					nullptr
-				);
+		int passes = png_set_interlace_handling(sprite->png().image);
+		if (s_spriteRowCopiedCallback) {
+			for (std::size_t p = 0; p < passes; p++)
+				for (std::size_t r = 0; r < sprite->size().height(); r++) {
+					png_read_row(
+						sprite->png().image, 
+						orows[sprite->y() + r] + sprite->x()*pixelSize, 
+						nullptr
+					);
+					// unfortunatetly we cannot use png_set_read_status_fn...
+					s_spriteRowCopiedCallback(
+						*this, i, r, p, passes
+					);
+				}
+		} else {
+			for (std::size_t p = 0; p < passes; p++)
+				for (std::size_t r = 0; r < sprite->size().height(); r++)
+					png_read_row(
+						sprite->png().image, 
+						orows[sprite->y() + r] + sprite->x()*pixelSize, 
+						nullptr
+					);
+		}
+
+		if (s_spriteCopiedCallback) 
+			s_spriteCopiedCallback(*this, i);
 
 		png_read_end(sprite->png().image, nullptr);
 		png_destroy_read_struct(&sprite->png().image, &sprite->png().info, nullptr);
@@ -131,7 +149,25 @@ void Ssmk::writeSprites() {
 		std::fclose(ifile);
 	}
 
-	png_write_image(opng, orows);
+	if (s_spritesCopiedCallback) 
+		s_spritesCopiedCallback(*this);
+
+	if (s_imageRowWrittenCallback) {
+		int passes = png_set_interlace_handling(opng);
+		for (std::size_t p = 0; p < passes; p++)
+			for (std::size_t r = 0; r < context.im.height; r++) {
+				png_write_rows(
+					opng,
+					orows,
+					1
+				);
+				// unfortunatetly we cannot use png_set_write_status_fn...
+				s_imageRowWrittenCallback(
+					*this, r, p, passes
+				);
+			}
+	} else
+		png_write_image(opng, orows);
 	png_write_end(opng, nullptr);
 
 	// cleanup
@@ -140,6 +176,9 @@ void Ssmk::writeSprites() {
 	png_free(opng, orows);
 	png_destroy_write_struct(&opng, &oinfo);
 	std::fclose(ofile);
+
+	if (s_imageWrittenCallback) 
+		s_imageWrittenCallback(*this);
 }
 
 

@@ -51,7 +51,7 @@ public:
 		std::size_t image
 	)
 	CALLBACK(
-	imageHeadersRead,
+		imageHeadersRead,
 	)
 
 	void packSprites();
@@ -65,22 +65,21 @@ public:
 
 	void writeSprites();
 	CALLBACK(
-		spriteRowWritten,
+		spriteRowCopied,
 		std::size_t sprite,
 		std::size_t row,
 		std::size_t pass,
 		std::size_t passes
 	)
 	CALLBACK(
-		spriteWritten,
+		spriteCopied,
 		std::size_t image
 	)
 	CALLBACK(
-		spritesWritten
+		spritesCopied
 	)
 	CALLBACK(
 		imageRowWritten,
-		std::size_t sprite,
 		std::size_t row,
 		std::size_t pass,
 		std::size_t passes
