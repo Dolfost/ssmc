@@ -4,6 +4,7 @@
 #include <ssmk/sprite.hpp>
 
 #include <vector>
+#include <array>
 #include <ostream>
 #include <filesystem>
 #include <string>
@@ -61,6 +62,7 @@ struct Context {
 				Adam7,
 			} interlacing = Interlacing::None;
 			const static std::unordered_map<std::string, Interlacing> interlacingText;
+			std::array<double, 3> background = {0, 0, 0};
 		} png;
 	} output;
 
@@ -97,6 +99,7 @@ struct Context {
 		S(output.packing.k);
 		SE(output.png.interlacing);
 		S(output.png.opaque);
+		SV(output.png.background);
 
 		S(config.file);
 

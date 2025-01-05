@@ -49,7 +49,6 @@ void Ssmk::fillContext(sm::Context& context) {
 	if (not inputTable)
 		SM_EX_THROW(ConfigFieldError, ConfigNoInputTable, context.config.file, "input")
 
-
 	toml::array* filesArray = (*inputTable)["files"].as_array();
 	if (not filesArray)
 		SM_EX_THROW(ConfigFieldError, ConfigNoInputFileArray, context.config.file, "input.files")
@@ -160,6 +159,36 @@ void Ssmk::fillContext(sm::Context& context) {
 				}
 			}
 		}
+		toml::array* backgroundArray = (*pngTable)["background"].as_array();
+		if (backgroundArray) {
+			if (backgroundArray->size() != 3)
+				SM_EX_THROW(
+					ConfigWrongFieldType, 
+					ConfigWrongFieldType,
+					context.config.file,
+					"output.png.background",
+					"array[" + std::to_string(backgroundArray->size()) + "]",
+					"array<double>[3]"
+				)
+			std::size_t idx = 0;
+			backgroundArray->for_each([&context, &idx](auto&& e) {
+				if constexpr (toml::is_number<decltype(e)>) {
+					if (e.get() < 0 or e.get() > 1) {
+						SM_EX_THROW(
+							ConfigUnexpectedFieldValue, 
+							ConfigNotRGB, 
+							context.config.file, 
+							"output.png.background", 
+							std::to_string(e.get()), std::string("0 <= a <= 1")
+						)
+					}
+					context.output.png.background[idx++] = e.get();
+				} else {
+					SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.config.file, "output.png.background", "array", "array<doublg>")
+				}
+			});
+		}
+
 	}
 }
 

@@ -47,6 +47,25 @@ void Ssmk::writeSprites() {
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT
 	);
 
+	png_color_16 bkgd;
+	int max = 1 << odepth;
+	if (ocolor & PNG_COLOR_MASK_COLOR) {
+		bkgd.red =   max*context.output.png.background[0];
+		bkgd.green = max*context.output.png.background[1];
+		bkgd.blue =  max*context.output.png.background[2];
+	} else {
+		bkgd.gray = (
+			6968 *  max*context.output.png.background[0] + 
+			23434 * max*context.output.png.background[1] + 
+			2366 *  max*context.output.png.background[2]
+		) / 32768;
+	}
+	if (not (ocolor & PNG_COLOR_MASK_ALPHA))
+		png_set_bKGD(
+			opng, oinfo,
+			&bkgd
+		);
+
 	std::FILE* ofile = 
 		std::fopen(context.output.file.c_str(), "wb");
 	if (not ofile)
@@ -69,6 +88,7 @@ void Ssmk::writeSprites() {
 		orows[i] = (png_bytep)png_malloc(
 			opng, png_get_rowbytes(opng, oinfo)
 		);
+		
 		if (not orows[i]) {
 			std::fclose(ofile);
 			png_destroy_write_struct(&opng, &oinfo);
@@ -81,7 +101,8 @@ void Ssmk::writeSprites() {
 
 	const bool ocol = ocolor & PNG_COLOR_MASK_COLOR;
 	const bool oalph = ocolor & PNG_COLOR_MASK_ALPHA;
-	const std::size_t pixelSize = png_get_channels(opng, oinfo);
+	// number of cnannels * 2 if depth if 16 or * 1 if 8
+	const std::size_t pixelSize = png_get_channels(opng, oinfo) << (odepth >> 4);
 
 	std::size_t spriteCount = context.im.sprites.size();
 	std::FILE* ifile = nullptr;
@@ -122,13 +143,17 @@ void Ssmk::writeSprites() {
 		if (oalph and not alph)
 			png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
 		if (alph and not oalph)
-			png_set_strip_alpha(png);
+			png_set_background(
+				png, &bkgd, 
+				PNG_BACKGROUND_GAMMA_SCREEN, 0, 1
+			);
 		if (odepth > depth)
 			png_set_expand_16(png);
 
+		int passes = png_set_interlace_handling(png);
+
 		png_read_update_info(sprite->png().image, sprite->png().info);
 
-		int passes = png_set_interlace_handling(png);
 		if (s_spriteRowCopiedCallback) {
 			for (std::size_t p = 0; p < passes; p++)
 				for (std::size_t r = 0; r < sprite->size().height(); r++) {

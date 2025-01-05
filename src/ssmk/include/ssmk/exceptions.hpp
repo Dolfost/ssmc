@@ -55,6 +55,7 @@ enum Type {
 	ConfigUnexpectedFieldValue, // class from FieldError
 	ConfigUnknownPackingAlgorithm,
 	ConfigUnknownPackingMetric,
+	ConfigNotRGB,
 	ConfigExclusiveFieldValues, // class from FieldError
 	ConfigIncreasingTreeFitPacking,
 	
@@ -100,6 +101,7 @@ static const std::unordered_map<Type, const std::string> text = {
 	{ ConfigUnexpectedFieldValue, "unexpected value" },
 	{ ConfigUnknownPackingAlgorithm, "unknown packing algorithm" },
 	{ ConfigUnknownPackingMetric, "unknown packing metric" },
+	{ ConfigNotRGB, "invalid RGB value" },
 	{ ConfigExclusiveFieldValues, "exclusive values" },
 	{ ConfigIncreasingTreeFitPacking, "increasing first fit packing is forbidden" },
 
