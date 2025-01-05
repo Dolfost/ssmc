@@ -8,3 +8,7 @@ file = "file.png"
 algorithm = "treeFit"
 order = "decreasing"
 metric = "width"
+
+[output.png]
+opaque = true 
+interlacing = "none"

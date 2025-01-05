@@ -55,12 +55,19 @@ struct Context {
 			std::size_t k = 1;
 		} packing;
 		struct Png {
+			bool opaque = false;
+			enum class Interlacing {
+				None, 
+				Adam7,
+			} interlacing = Interlacing::None;
+			const static std::unordered_map<std::string, Interlacing> interlacingText;
 		} png;
 	} output;
 
 	struct Intermediate {
 		int maxBitDepth = 0;
-		int maxColorType = 0;
+		bool maxColor = 0;
+		bool maxAlpha = 0;
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 		~Intermediate() {
 			for (auto ptr: sprites) {
@@ -88,6 +95,8 @@ struct Context {
 		SE(output.packing.order);
 		SE(output.packing.metric);
 		S(output.packing.k);
+		SE(output.png.interlacing);
+		S(output.png.opaque);
 
 		S(config.file);
 
@@ -96,7 +105,7 @@ struct Context {
 			os << "  " << *static_cast<Sprite*>(r) << '\n';
 		}
 		S(im.maxBitDepth);
-		S(im.maxColorType);
+		S(im.maxColor);
 		S(im.width);
 		S(im.height);
 

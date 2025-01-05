@@ -76,7 +76,8 @@ void Ssmk::readImageHeaders() {
 		if (tRNS)
 			colorType |= PNG_COLOR_MASK_ALPHA;
 
-		context.im.maxColorType |= colorType;
+		context.im.maxColor |= colorType & PNG_COLOR_MASK_COLOR;
+		context.im.maxAlpha |= colorType & PNG_COLOR_MASK_ALPHA;
 		context.im.maxBitDepth = std::max(
 			context.im.maxBitDepth, bitDepth
 		);

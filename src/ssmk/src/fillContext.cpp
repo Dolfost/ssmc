@@ -77,6 +77,7 @@ void Ssmk::fillContext(sm::Context& context) {
 
 	context.output.file = context.config.directory / *outputFile;
 
+	// output.packing
 	toml::table* packingTable = (*outputTable)["packing"].as_table();
 	if (packingTable) {
 		std::optional<std::string> algorithm = (*packingTable)["algorithm"].value<std::string>();
@@ -141,6 +142,23 @@ void Ssmk::fillContext(sm::Context& context) {
 					std::string(">0")
 				);
 			context.output.packing.k = *k;
+		}
+	}
+
+	// output.png
+	toml::table* pngTable = (*outputTable)["png"].as_table();
+	if (pngTable) {
+		std::optional<bool> opaque = (*pngTable)["opaque"].value<bool>();
+		if (opaque) 
+			context.output.png.opaque = *opaque;
+		std::optional<std::string> interlacing = (*pngTable)["interlacing"].value<std::string>();
+		if (interlacing) {
+			for (const auto& [k, v]: Context::Output::Png::interlacingText) {
+				if (k == *interlacing) {
+					context.output.png.interlacing = v;
+					break;
+				}
+			}
 		}
 	}
 }

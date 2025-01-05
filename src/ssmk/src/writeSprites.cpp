@@ -13,7 +13,18 @@ void Ssmk::writeSprites() {
 	png_structp opng = nullptr;
 	png_infop oinfo = nullptr;
 
-	const int odepth = context.im.maxBitDepth, ocolor = context.im.maxColorType;
+	const int odepth = context.im.maxBitDepth;
+	const int ocolor = (context.im.maxColor ? PNG_COLOR_MASK_COLOR : 0) | 
+		(context.output.png.opaque ? 0 : (context.im.maxAlpha ? PNG_COLOR_MASK_ALPHA : 0));
+	int interlacing;
+	switch (context.output.png.interlacing) {
+		case Context::Output::Png::Interlacing::None:
+			interlacing = PNG_INTERLACE_NONE;
+			break;
+		case Context::Output::Png::Interlacing::Adam7:
+			interlacing = PNG_INTERLACE_ADAM7;
+			break;
+	}
 
 	opng = png_create_write_struct(
 		PNG_LIBPNG_VER_STRING,
@@ -32,7 +43,7 @@ void Ssmk::writeSprites() {
 
 	png_set_IHDR(
 		opng, oinfo, context.im.width, context.im.height,
-		odepth, ocolor, PNG_INTERLACE_NONE,
+		odepth, ocolor, interlacing,
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT
 	);
 
@@ -83,11 +94,11 @@ void Ssmk::writeSprites() {
 		if (not ifile)
 			SM_EX_THROW(PngError, PngFailedToOpenForReading, sprite->path());
 		std::fseek(ifile, sprite->png().pos, SEEK_SET);
-		png_init_io(sprite->png().image, ifile);
+		png_init_io(png, ifile);
 
 		int depth, color;
 		png_get_IHDR(
-			sprite->png().image, sprite->png().info,
+			png, info,
 			nullptr, nullptr, &depth, &color, 
 			nullptr, nullptr, nullptr
 		);
@@ -97,7 +108,7 @@ void Ssmk::writeSprites() {
 			png, info,
 			PNG_INFO_tRNS
 		);
-		if (tRNS) {
+		if (tRNS and oalph) {
 			png_set_tRNS_to_alpha(png);
 			color |= PNG_COLOR_MASK_ALPHA;
 		}
@@ -110,17 +121,19 @@ void Ssmk::writeSprites() {
 			png_set_gray_to_rgb(png);
 		if (oalph and not alph)
 			png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
+		if (alph and not oalph)
+			png_set_strip_alpha(png);
 		if (odepth > depth)
 			png_set_expand_16(png);
 
 		png_read_update_info(sprite->png().image, sprite->png().info);
 
-		int passes = png_set_interlace_handling(sprite->png().image);
+		int passes = png_set_interlace_handling(png);
 		if (s_spriteRowCopiedCallback) {
 			for (std::size_t p = 0; p < passes; p++)
 				for (std::size_t r = 0; r < sprite->size().height(); r++) {
 					png_read_row(
-						sprite->png().image, 
+						png,
 						orows[sprite->y() + r] + sprite->x()*pixelSize, 
 						nullptr
 					);
@@ -133,7 +146,7 @@ void Ssmk::writeSprites() {
 			for (std::size_t p = 0; p < passes; p++)
 				for (std::size_t r = 0; r < sprite->size().height(); r++)
 					png_read_row(
-						sprite->png().image, 
+						png,
 						orows[sprite->y() + r] + sprite->x()*pixelSize, 
 						nullptr
 					);
@@ -142,7 +155,7 @@ void Ssmk::writeSprites() {
 		if (s_spriteCopiedCallback) 
 			s_spriteCopiedCallback(*this, i);
 
-		png_read_end(sprite->png().image, nullptr);
+		png_read_end(png, nullptr);
 		png_destroy_read_struct(&sprite->png().image, &sprite->png().info, nullptr);
 		sprite->png().image = nullptr;
 		sprite->png().info = nullptr;

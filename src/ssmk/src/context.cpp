@@ -25,4 +25,10 @@ const std::unordered_map<std::string, Context::Output::Packing::Metric>
 	{ "perimeter", Context::Output::Packing::Metric::Perimeter },
 	{ "area",      Context::Output::Packing::Metric::Area },
 };
+
+const std::unordered_map<std::string, Context::Output::Png::Interlacing> 
+	Context::Output::Png::interlacingText {
+	{ "none",     Context::Output::Png::Interlacing::None },
+	{ "adam7",     Context::Output::Png::Interlacing::Adam7 },
+};
 }
