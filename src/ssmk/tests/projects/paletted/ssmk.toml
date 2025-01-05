@@ -1,0 +1,5 @@
+[input]
+files = [ 'paletted.png' ]
+
+[output]
+file = "file.png"
