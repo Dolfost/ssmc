@@ -51,7 +51,7 @@ struct Context {
 				MinSide,
 				Perimeter,
 				Area,
-			} metric = Metric::MaxSide;
+			} metric = Metric::MinSide;
 			const static std::unordered_map<std::string, Metric> metricText;
 			std::size_t k = 1;
 		} packing;
@@ -81,6 +81,7 @@ struct Context {
 		void* background = nullptr; // output png background structure
 		void* rows = nullptr; // output buffer
 		void* chunk = nullptr; // ssmk specific png chunk
+		int chunkSize = 0;
 		int color = 0; // output color mode
 		int depth = 0; // output color depth
 		~Intermediate();

@@ -39,8 +39,8 @@ Context::Intermediate::~Intermediate() {
 		delete ptr;
 	if (rows != nullptr)
 		for (std::size_t i = 0; i < height; i++)
-			delete ((png_bytepp)rows)[i];
-	delete (png_bytepp)rows; 
+			delete[] ((png_bytepp)rows)[i];
+	delete[] (png_bytepp)rows; 
 	png_structp& p = (png_structp&)png;
 	png_infop& i = (png_infop&)info;
 	png_destroy_write_struct(&p, &i);

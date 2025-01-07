@@ -1,0 +1,16 @@
+[input]
+files = [ 'png' ]
+
+[output]
+file = "file.png"
+
+[output.packing]
+algorithm = "treeFit"
+order = "decreasing"
+metric = "minSide"
+
+[output.png]
+compression = 9
+opaque = false
+background = [0.2, 0.6, 0.2]
+interlacing = "none"

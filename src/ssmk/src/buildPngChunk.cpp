@@ -3,7 +3,6 @@
 namespace sm {
 
 void Ssmk::buildPngChunk() {
-
 }
 
 }
