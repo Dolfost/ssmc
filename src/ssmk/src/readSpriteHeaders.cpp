@@ -59,24 +59,17 @@ void Ssmk::readSpriteHeaders() {
 			nullptr, nullptr, nullptr
 		);
 
-		// skip paletted images
-		if (color == PNG_COLOR_TYPE_PALETTE) {
-			std::fclose(file);
+		// or's current image with all input
+		context.im.colorPresent   += bool(color & PNG_COLOR_MASK_COLOR);
+		context.im.palettePresent += bool(color & PNG_COLOR_MASK_PALETTE);
+		context.im.alphaPresent   += bool(color & PNG_COLOR_MASK_ALPHA);
+		context.im.tRNSPresent    += bool(png_get_valid(png, info, PNG_INFO_tRNS));
+		context.im.depth          =  std::max(context.im.depth, depth);
+
+		//  TODO: add support for paletted to rgba conversion
+		// https://stackoverflow.com/questions/79334694/how-to-convert-indexed-8-bit-png-image-to-8-bit-rgba-with-libpng
+		if (context.im.palettePresent)
 			SM_EX_THROW(PngError, PngPalettedImage, sprite->path());
-		}
-
-		const bool tRNS = png_get_valid(
-			png, info,
-			PNG_INFO_tRNS
-		);
-		if (tRNS)
-			color |= PNG_COLOR_MASK_ALPHA;
-
-		context.im.isColor |= color & PNG_COLOR_MASK_COLOR;
-		context.im.isAlpha |= color & PNG_COLOR_MASK_ALPHA;
-		context.im.depth = std::max(
-			context.im.depth, depth
-		);
 
 		sprite->setSize({width, height});
 		sprite->png().pos = std::ftell(file);

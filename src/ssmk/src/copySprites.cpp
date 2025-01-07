@@ -14,8 +14,9 @@ void Ssmk::copySprites() {
 	png_structp& opng = (png_structp&)context.im.png;
 	png_infop& oinfo = (png_infop&)context.im.info;
 
-	const bool ocol = context.im.color  & PNG_COLOR_MASK_COLOR;
+	const bool ocol  = context.im.color & PNG_COLOR_MASK_COLOR;
 	const bool oalph = context.im.color & PNG_COLOR_MASK_ALPHA;
+	const bool oplt  = context.im.color & PNG_COLOR_MASK_PALETTE;
 	
 	const std::size_t pixelSize = // some shifting magic :)
 		png_get_channels(opng, oinfo) << (context.im.depth >> 4);
@@ -40,38 +41,36 @@ void Ssmk::copySprites() {
 			nullptr, nullptr, nullptr
 		);
 
-		// replace tRNS chunk with alpha channel
+		const bool col  = color & PNG_COLOR_MASK_COLOR;
+		const bool alph = color & PNG_COLOR_MASK_ALPHA;
+		const bool plt  = color & PNG_COLOR_MASK_PALETTE;
 		const bool tRNS = png_get_valid(
 			png, info,
 			PNG_INFO_tRNS
 		);
-		if (tRNS and oalph) {
-			png_set_tRNS_to_alpha(png);
-			color |= PNG_COLOR_MASK_ALPHA;
-		}
-
-		const bool col = color & PNG_COLOR_MASK_COLOR;
-		const bool alph = color & PNG_COLOR_MASK_ALPHA;
 
 		// transform image to output type
-		if (ocol and not col) {
-			if (depth < 8)
-				png_set_expand_gray_1_2_4_to_8(png);
+		if (ocol and not col)
 			png_set_gray_to_rgb(png);
-		}
-		if (oalph and not alph)
-			png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
-		if (alph and not oalph)
+		if (depth <= 8 and context.im.depth == 8)
+			png_set_expand(png);
+		else if (depth < 16 and context.im.depth == 16)
+			png_set_expand_16(png);
+		if (oalph and not alph) {
+			if (tRNS)
+				png_set_tRNS_to_alpha(png);
+			else
+				png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
+		} else if ((alph or tRNS) and not oalph) {
 			png_set_background(
 				png, (png_color_16p)context.im.background, 
 				PNG_BACKGROUND_GAMMA_SCREEN, 0, 1
 			);
-		if (context.im.depth > depth)
-			png_set_expand_16(png);
+		}
 
 		int passes = png_set_interlace_handling(png);
 
-		png_read_update_info(sprite->png().image, sprite->png().info);
+		png_read_update_info(png, info);
 
 		png_bytepp rows = (png_bytepp)context.im.rows;
 		if (s_spriteRowCopiedCallback) {
@@ -110,12 +109,5 @@ void Ssmk::copySprites() {
 	if (s_spritesCopiedCallback) 
 		s_spritesCopiedCallback(*this);
 }
-
-
-/*
- *  TODO:
- * - unknow chunk handling (exception)
- * - 
-*/
 
 }

@@ -70,8 +70,11 @@ struct Context {
 	struct Intermediate {
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 
-		bool isColor = 0;
-		bool isAlpha = 0;
+		std::size_t colorPresent   = 0;
+		std::size_t alphaPresent   = 0;
+		std::size_t palettePresent = 0;
+		std::size_t tRNSPresent    = 0;
+
 		std::size_t width, height; // output dimentions
 		void* png = nullptr;  // output png data structure
 		void* info = nullptr; // output png info structure
@@ -112,7 +115,7 @@ struct Context {
 			os << "  " << *static_cast<Sprite*>(r) << '\n';
 		}
 		S(im.depth);
-		S(im.isColor);
+		S(im.colorPresent);
 		S(im.width);
 		S(im.height);
 

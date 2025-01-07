@@ -10,8 +10,14 @@ void Ssmk::makeOutputPng() {
 	png_structp& png = (png_structp&)context.im.png;
 	png_infop& info = (png_infop&)context.im.info;
 
-	context.im.color = (context.im.isColor ? PNG_COLOR_MASK_COLOR : 0) | 
-		(context.output.png.opaque ? 0 : (context.im.isAlpha ? PNG_COLOR_MASK_ALPHA : 0));
+	context.im.color = 0;
+	// expand all to rgb if required
+	if (context.im.colorPresent)
+		context.im.color |= PNG_COLOR_MASK_COLOR;
+	if ((context.im.alphaPresent or context.im.tRNSPresent) and not 
+		context.output.png.opaque)
+		context.im.color |= PNG_COLOR_MASK_ALPHA;
+
 	int interlacing;
 	switch (context.output.png.interlacing) {
 		case Context::Output::Png::Interlacing::None:
