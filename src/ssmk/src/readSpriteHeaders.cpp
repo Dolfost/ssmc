@@ -67,9 +67,8 @@ void Ssmk::readSpriteHeaders() {
 		context.im.depth          =  std::max(context.im.depth, depth);
 
 		//  TODO: add support for paletted to rgba conversion
-		// https://stackoverflow.com/questions/79334694/how-to-convert-indexed-8-bit-png-image-to-8-bit-rgba-with-libpng
-		if (context.im.palettePresent)
-			SM_EX_THROW(PngError, PngPalettedImage, sprite->path());
+		// if (context.im.palettePresent)
+		// 	SM_EX_THROW(PngError, PngPalettedImage, sprite->path());
 
 		sprite->setSize({width, height});
 		sprite->png().pos = std::ftell(file);

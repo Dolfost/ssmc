@@ -7,7 +7,7 @@ file = "file.png"
 [output.packing]
 algorithm = "treeFit"
 order = "decreasing"
-metric = "maxSide"
+metric = "minSide"
 
 [output.png]
 compression = 9

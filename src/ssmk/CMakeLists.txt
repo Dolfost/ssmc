@@ -3,8 +3,7 @@ FetchContent_Declare(
     calgo QUIET
     GIT_REPOSITORY https://github.com/Dolfost/calgo.git
 
-    # GIT_TAG v3.2.0.0
-    GIT_TAG f41d736435574dc55acbd09621b504c23affae62
+    GIT_TAG v3.3.0.0
 )
 FetchContent_MakeAvailable(calgo)
 FetchContent_Declare(

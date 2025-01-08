@@ -9,8 +9,7 @@ int main(int argc, char** argv) {
 		s();
 	} catch (sm::ex::PngError& ex) {
 		std::cout << ex.path() << ": " << ex.what() << ": " << ex.description();
-		return ex.code() == sm::ex::code::PngPalettedImage ? sm::ex::code::Good : sm::ex::code::Bad;
-		
+		return sm::ex::code::Bad;
 	} catch (sm::ex::Error& ex) {
 		std::cout << ex.what() << ": " << ex.description();
 		return sm::ex::code::Bad;
@@ -19,5 +18,5 @@ int main(int argc, char** argv) {
 		return sm::ex::code::Bad;
 	}
 
-	return sm::ex::code::Bad;
+	return sm::ex::code::Good;
 }

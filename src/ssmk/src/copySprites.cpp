@@ -52,7 +52,7 @@ void Ssmk::copySprites() {
 		// transform image to output type
 		if (ocol and not col)
 			png_set_gray_to_rgb(png);
-		if (depth <= 8 and context.im.depth == 8)
+		if ((depth < 8 or plt) and context.im.depth == 8)
 			png_set_expand(png);
 		else if (depth < 16 and context.im.depth == 16)
 			png_set_expand_16(png);
@@ -60,7 +60,7 @@ void Ssmk::copySprites() {
 			if (tRNS)
 				png_set_tRNS_to_alpha(png);
 			else
-				png_set_add_alpha(png, 1 << 16, PNG_FILLER_AFTER);
+				png_set_add_alpha(png, 0xFFFFFFFF, PNG_FILLER_AFTER);
 		} else if ((alph or tRNS) and not oalph) {
 			png_set_background(
 				png, (png_color_16p)context.im.background, 
