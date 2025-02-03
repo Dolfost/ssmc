@@ -9,8 +9,8 @@ namespace sm {
 	Sprite* sprite = new Sprite;  \
 	sprite->setPath(P);  \
 	context.im.sprites.push_back(sprite);  \
-	if (s_fileFoundCallback)  \
-		s_fileFoundCallback(*this); \
+	if (m_file_found_callback)  \
+		m_file_found_callback(*this); \
 
 void Ssmk::findFiles() {
 	for (auto ptr: context.im.sprites) {
@@ -30,8 +30,8 @@ void Ssmk::findFiles() {
 	}
 	if (context.im.sprites.empty())
 		SM_EX_THROW(Error, NoSpritesFound)
-	if (s_filesFoundCallback)
-		s_filesFoundCallback(*this);
+	if (m_files_found_callback)
+		m_files_found_callback(*this);
 }
 
 #undef SSMK_ADD_SPRITE

@@ -6,8 +6,8 @@ namespace sm {
 void Ssmk::readConfig() {
 	Ssmk::fillContext(context);
 
-	if (s_configReadCallback)
-		s_configReadCallback({*this});
+	if (m_config_read_callback)
+		m_config_read_callback({*this});
 }
 
 }

@@ -66,21 +66,17 @@ void Ssmk::readSpriteHeaders() {
 		context.im.tRNSPresent    += bool(png_get_valid(png, info, PNG_INFO_tRNS));
 		context.im.depth          =  std::max(context.im.depth, depth);
 
-		//  TODO: add support for paletted to rgba conversion
-		// if (context.im.palettePresent)
-		// 	SM_EX_THROW(PngError, PngPalettedImage, sprite->path());
-
 		sprite->setSize({width, height});
 		sprite->png().pos = std::ftell(file);
 		png_init_io(png, nullptr);
 		std::fclose(file);
 
-		if (s_imageHeaderReadCallback)
-			s_imageHeaderReadCallback(*this, i);
+		if (m_image_header_read_callback)
+			m_image_header_read_callback(*this, i);
 	}
 
-	if (s_imageHeadersReadCallback)
-		s_imageHeadersReadCallback(*this);
+	if (m_image_headers_read_callback)
+		m_image_headers_read_callback(*this);
 }
 
 }

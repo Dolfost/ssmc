@@ -19,7 +19,7 @@ int Application::run(int argc, const char** argv) {
 
 	int code = EXIT_SUCCESS;
 
-	a_ssmk.imagesPackedCallback([](const Ssmk& sm) {
+	a_ssmk.set_images_packed_callback([](const Ssmk& sm) {
 		std::cout << "SSMK context (after packing):\n" << sm.context << std::endl;
 	});
 

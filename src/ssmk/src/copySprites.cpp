@@ -73,7 +73,7 @@ void Ssmk::copySprites() {
 		png_read_update_info(png, info);
 
 		png_bytepp rows = (png_bytepp)context.im.rows;
-		if (s_spriteRowCopiedCallback) {
+		if (m_sprite_row_copied_callback) {
 			for (std::size_t p = 0; p < passes; p++)
 				for (std::size_t r = 0; r < sprite->size().height(); r++) {
 					png_read_row(
@@ -82,7 +82,7 @@ void Ssmk::copySprites() {
 						nullptr
 					);
 					// unfortunatetly we cannot use png_set_read_status_fn...
-					s_spriteRowCopiedCallback(
+					m_sprite_row_copied_callback(
 						*this, i, r, p, passes
 					);
 				}
@@ -96,8 +96,8 @@ void Ssmk::copySprites() {
 					);
 		}
 
-		if (s_spriteCopiedCallback) 
-			s_spriteCopiedCallback(*this, i);
+		if (m_sprite_copied_callback) 
+			m_sprite_copied_callback(*this, i);
 
 		png_read_end(png, nullptr);
 		png_destroy_read_struct(&png, &info, nullptr);
@@ -106,8 +106,8 @@ void Ssmk::copySprites() {
 		std::fclose(ifile);
 	}
 
-	if (s_spritesCopiedCallback) 
-		s_spritesCopiedCallback(*this);
+	if (m_sprites_copied_callback) 
+		m_sprites_copied_callback(*this);
 }
 
 }

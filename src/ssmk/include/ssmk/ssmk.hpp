@@ -8,16 +8,16 @@
 
 #define CALLBACK(NAME, ...) \
 	private: \
-		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)> s_##NAME##Callback; \
+		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)> m_##NAME##_callback; \
 	public: \
-		void NAME##Callback(const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
-			s_##NAME##Callback = callback; \
+		void set_##NAME##_callback(const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
+			m_##NAME##_callback = callback; \
 		} \
-		const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##Callback() const { \
-			return s_##NAME##Callback; \
+		const std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() const { \
+			return m_##NAME##_callback; \
 		} \
-		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##Callback() { \
-			return s_##NAME##Callback; \
+		std::function<void(const Ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
+			return m_##NAME##_callback; \
 		}
 
 namespace sm {
@@ -35,70 +35,70 @@ public:
 
 public:
 	void readConfig();
-	CALLBACK(configRead)
+	CALLBACK(config_read)
 
 	void findFiles();
 	CALLBACK(
-		fileFound
+		file_found
 	)
 	CALLBACK(
-		filesFound
+		files_found
 	)
 
 	void readSpriteHeaders();
 	CALLBACK(
-		imageHeaderRead,
+		image_header_read,
 		std::size_t image
 	)
 	CALLBACK(
-		imageHeadersRead,
+		image_headers_read,
 	)
 
 	void packSprites();
 	CALLBACK(
-		imagePacked,
+		image_packed,
 		std::size_t imageNo
 	)
 	CALLBACK(
-		imagesPacked
+		images_packed
 	)
 
 	void makeOutputPng();
 
 	void buildPngChunk();
 	CALLBACK(
-		pngChunkEntryWritten,
+		png_chunk_entry_written,
 		std::size_t sprite
 	)
 	CALLBACK(
-		pngChunkBuilt
+		png_chunk_built
 	)
 
 	void copySprites();
 	CALLBACK(
-		spriteRowCopied,
+		sprite_row_copied,
 		std::size_t sprite,
 		std::size_t row,
 		std::size_t pass,
 		std::size_t passes
 	)
 	CALLBACK(
-		spriteCopied,
+		sprite_copied,
 		std::size_t image
 	)
 	CALLBACK(
-		spritesCopied
+		sprites_copied
 	)
 
 	void writePng();
 	CALLBACK(
-		imageRowWritten,
+		image_row_written,
 		std::size_t row,
 		std::size_t pass,
 		std::size_t passes
 	)
 	CALLBACK(
-		pngWritten
+		png_written
 	)
 
 public:

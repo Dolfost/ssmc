@@ -20,7 +20,7 @@ void Ssmk::writePng() {
 
 	png_write_info(png, info);
 
-	if (s_imageRowWrittenCallback) {
+	if (m_image_row_written_callback) {
 		int passes = png_set_interlace_handling(png);
 		for (std::size_t p = 0; p < passes; p++)
 			for (std::size_t r = 0; r < context.im.height; r++) {
@@ -30,7 +30,7 @@ void Ssmk::writePng() {
 					1
 				);
 				// unfortunatetly we cannot use png_set_write_status_fn...
-				s_imageRowWrittenCallback(
+				m_image_row_written_callback(
 					*this, r, p, passes
 				);
 			}
@@ -49,8 +49,8 @@ void Ssmk::writePng() {
 	png_destroy_write_struct(&png, &info);
 	std::fclose(ofile);
 
-	if (s_pngWrittenCallback) 
-		s_pngWrittenCallback(*this);
+	if (m_png_written_callback) 
+		m_png_written_callback(*this);
 }
 
 }

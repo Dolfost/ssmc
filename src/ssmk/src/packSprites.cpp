@@ -71,12 +71,12 @@ void Ssmk::packSprites() {
 		);
 	}
 
-	if (s_imagePackedCallback)
+	if (m_image_packed_callback)
 		packing->boxPackedCallback(
 			[this](
 				const std::vector<ca::optim::Box2D<std::size_t>*>& boxes, 
 				std::size_t index) {
-				this->s_imagePackedCallback(*this, index);
+				this->m_image_packed_callback(*this, index);
 			}
 		);
 
@@ -86,8 +86,8 @@ void Ssmk::packSprites() {
 
 	delete packing;
 
-	if (s_imagesPackedCallback)
-		s_imagesPackedCallback(*this);
+	if (m_images_packed_callback)
+		m_images_packed_callback(*this);
 }
 
 }
