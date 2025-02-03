@@ -4,9 +4,8 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.conf.directory = TESTPATH "/projects/shortRGBarray";
 	try {
-		s.read_config();
+		s.read_config(TESTPATH "/projects/shortRGBarray");
 	} catch (sm::ex::config_wrong_field_type& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
 		return sm::ex::code::good;

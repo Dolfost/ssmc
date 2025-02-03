@@ -5,6 +5,8 @@
 #include <ssmk/sprite.hpp>
 
 #include <functional>
+#include <cstddef>
+#include <type_traits>
 
 #define CALLBACK(NAME, ...) \
 	private: \
@@ -24,17 +26,23 @@ namespace sm {
 
 class ssmk {
 public:
+	using size_type = std::size_t;
+
+public:
 	ssmk(const sm::context& context = {}): m_context(context) {};
 
 	sm::context& context = m_context;
 
 public:
-	struct CallbackInfo {
-		const ssmk& ssmk;
-	};
+	template<typename P> typename 
+	std::enable_if<std::is_assignable<std::filesystem::path, P>::value>::type read_config(P&& dir) {
+		context.conf.directory = std::forward<P>(dir);
+		ssmk::fill_context(context);
 
-public:
-	void read_config();
+		if (m_config_read_callback)
+			m_config_read_callback(m_context);
+	}
+
 	CALLBACK(config_read)
 
 	void find_files();
@@ -102,8 +110,9 @@ public:
 	)
 
 public:
-	void operator()() {
-		read_config();
+	template<typename P> typename 
+	std::enable_if<std::is_assignable<std::filesystem::path, P>::value>::type make_sheet(P&& dir) {
+		read_config(std::forward<P>(dir));
 		find_files();
 		read_sprite_headers();
 		pack_sprites();
@@ -113,10 +122,24 @@ public:
 		write_png();
 	}
 
+	/*
+	 * will use m_context.conf.file or find config file in
+	 * m_context.conf.directory and extract from it the output.file field and 
+	 * read the png and build the std::map<std::string, sprite>
+	*/
+	void read_sheet() {
+	}
+
+	/*
+	 * will write read sheet tree to specified directory
+	*/
+	void extract_sheet() {
+	}
+
 	static void fill_context(sm::context& context);
 
 public:
-	constexpr static const std::array configFilenames = {
+	constexpr static const std::array config_filenames = {
 		"ssmk.toml", "sprite.toml", "spritesheet.toml"
 	};
 	constexpr static const char* chunk_name = "ssMK";

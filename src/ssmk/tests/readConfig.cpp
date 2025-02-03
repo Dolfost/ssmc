@@ -4,9 +4,8 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.conf.directory = TESTPATH "/projects/ex1";
 	try {
-		s.read_config();
+		s.read_config(TESTPATH "/projects/ex1");
 	} catch (std::exception& ex) {
 		std::cout << ex.what();
 		return sm::ex::code::bad;

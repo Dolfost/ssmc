@@ -12,9 +12,6 @@ int Application::run(int argc, const char** argv) {
 	if (parseResult != EXIT_SUCCESS)
 		return parseResult;
 
-	a_ssmk.context.conf.directory = 
-		std::filesystem::absolute(context.sourceDirectory);
-
 	std::cout << "CLI context:\n" << context << std::endl;
 
 	int code = EXIT_SUCCESS;
@@ -24,7 +21,7 @@ int Application::run(int argc, const char** argv) {
 	});
 
 	try {
-		a_ssmk();
+		a_ssmk.make_sheet(std::filesystem::absolute(context.sourceDirectory));
 	} catch (sm::ex::config_field_error& ex) {
 		std::cerr << ex.what() << ": " << ex.description() << ": " << ex.field() << std::endl;
 		code = ex.code();

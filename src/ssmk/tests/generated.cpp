@@ -4,9 +4,8 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.conf.directory = TESTPATH "/projects/generated";
 	try {
-		s();
+		s.make_sheet(TESTPATH "/projects/generated");
 	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description();
 		return sm::ex::code::bad;

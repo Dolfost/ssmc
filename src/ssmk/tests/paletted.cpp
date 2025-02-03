@@ -4,9 +4,8 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.conf.directory = TESTPATH "/projects/paletted";
 	try {
-		s();
+		s.make_sheet(TESTPATH "/projects/paletted");
 	} catch (sm::ex::png_error& ex) {
 		std::cout << ex.path() << ": " << ex.what() << ": " << ex.description();
 		return sm::ex::code::bad;

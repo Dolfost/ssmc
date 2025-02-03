@@ -29,7 +29,7 @@ void ssmk::fill_context(sm::context& context) {
 	if (not std::filesystem::is_directory(context.conf.directory))
 		SM_EX_THROW(file_error, source_directory_not_found, context.conf.directory)
 
-	for (const auto& filename: configFilenames) {
+	for (const auto& filename: config_filenames) {
 		if (std::filesystem::is_regular_file(context.conf.directory / filename)) {
 			context.conf.file = context.conf.directory / filename;
 			break;

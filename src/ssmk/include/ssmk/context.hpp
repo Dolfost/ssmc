@@ -12,10 +12,6 @@
 #include <cstdint>
 #include <type_traits>
 
-namespace ca::optim {
-template<typename T> class Box2D;
-}
-
 namespace sm {
 
 struct context {
@@ -125,6 +121,7 @@ struct context {
 
 		#undef S
 		#undef SV
+		#undef SE
 	}
 
 };

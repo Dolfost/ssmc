@@ -18,7 +18,7 @@ namespace sm::ex {
 namespace code {
 enum type {
 	good = EXIT_SUCCESS, 
-	bad = EXIT_FAILURE, // Error class
+	bad = EXIT_FAILURE, // error class
 
 	ssmk_error_space_start = 1400,
 
@@ -206,12 +206,12 @@ public:
 		const std::filesystem::path& path,
 		const std::string& field,
 		const std::string& type,
-		const std::string& expectedType,
+		const std::string& expected_type,
 		const std::string& description = code::text.at(code::config_wrong_field_type),
 		code::type code = code::config_field_error,
 		const std::string& what = code::text.at(code::config_field_error)
 	): config_field_error(path, field, description, code, what), 
-		m_type(type), m_expectedType(expectedType) {};
+		m_type(type), m_expectedType(expected_type) {};
 	const std::string& type() { return m_type; }
 	const std::string& expectedType() { return m_expectedType; }
 private:

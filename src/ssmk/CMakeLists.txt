@@ -22,7 +22,6 @@ project(ssmk
 )
 
 add_library(sm_ssmk 
-	src/read_config.cpp
 	src/find_files.cpp
 	src/read_sprite_headers.cpp
 	src/pack_sprites.cpp

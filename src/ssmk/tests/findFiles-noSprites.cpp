@@ -4,9 +4,8 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.conf.directory = TESTPATH "/projects/nosprites" ;
 	try {
-		s.read_config();
+		s.read_config(TESTPATH "/projects/nosprites" );
 		s.find_files();
 	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description() << std::endl;
