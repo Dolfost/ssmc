@@ -1,8 +1,6 @@
 #ifndef _SSMK_SSMK_CONTEXT_HPP_
 #define _SSMK_SSMK_CONTEXT_HPP_
 
-#include <ssmk/sprite.hpp>
-
 #include <vector>
 #include <array>
 #include <iosfwd>
@@ -10,7 +8,22 @@
 #include <string>
 #include <unordered_map>
 #include <cstdint>
-#include <type_traits>
+
+namespace ca::optim {
+
+template<typename T> 
+class Box2D;
+
+}
+
+typedef struct png_struct_def png_struct;
+typedef png_struct* png_structp;
+typedef struct png_info_def png_info;
+typedef png_info* png_infop;
+typedef struct png_color_16_struct png_color_16;
+typedef png_color_16_struct* png_color_16p;
+typedef unsigned char png_byte;
+typedef png_byte** png_bytepp;
 
 namespace sm {
 
@@ -73,56 +86,18 @@ struct context {
 		std::size_t tRNS_present    = 0;
 
 		std::size_t width, height; ///< Output dimentions
-		void* png = nullptr;  ///< Output png data structure
-		void* info = nullptr; ///< Output png info structure
-		void* background = nullptr; ///< Output png background structure
-		void* rows = nullptr; ///< Output buffer
+		png_structp png = nullptr;  ///< Output png data structure
+		png_infop info = nullptr; ///< Output png info structure
+		png_color_16p background = nullptr; ///< Output png background structure
+		png_bytepp rows = nullptr; ///< Output buffer
 		int color = 0; ///< Output color mode
 		int depth = 0; ///< Output color depth
-		void* chunk = nullptr; ///< Ssmk specific png chunk
+		void* chunk = nullptr; ///< SSMK specific png chunk
 		std::uint32_t chunk_size = 0;
 		~intermediate();
 	} im;
 
-	friend std::ostream& operator<<(std::ostream& os, const context& c) {
-		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
-		#define SE(PROP) os << #PROP ": " << static_cast<std::underlying_type<decltype(c.PROP)>::type>(c.PROP) << std::endl;
-		#define SV(PROP) \
-		os << #PROP ": \n"; \
-		for (const auto& r : c.PROP) { \
-			os << "  " << r << '\n'; \
-		}
-
-		SV(in.files);
-
-		S(conf.directory);
-		S(out.file);
-
-		SE(out.pack.alg);
-		SE(out.pack.order);
-		SE(out.pack.metric);
-		S(out.pack.k);
-		SE(out.png.inter);
-		S(out.png.opaque);
-		SV(out.png.background);
-
-		S(conf.file);
-
-		os << "im.sprites" ": \n";
-		for (const auto& r : c.im.sprites) {
-			os << "  " << *static_cast<sprite*>(r) << '\n';
-		}
-		S(im.depth);
-		S(im.color_present);
-		S(im.width);
-		S(im.height);
-
-		return os;
-
-		#undef S
-		#undef SV
-		#undef SE
-	}
+	friend std::ostream& operator<<(std::ostream& os, const context& c);
 
 };
 

@@ -7,9 +7,6 @@
 namespace sm {
 
 void ssmk::make_output_png() {
-	png_structp& png = (png_structp&)context.im.png;
-	png_infop& info = (png_infop&)context.im.info;
-
 	context.im.color = 0;
 	// expand all to rgb if required
 	if (context.im.color_present)
@@ -28,23 +25,23 @@ void ssmk::make_output_png() {
 			break;
 	}
 
-	png = png_create_write_struct(
+	context.im.png = png_create_write_struct(
 		PNG_LIBPNG_VER_STRING,
 		nullptr, nullptr, nullptr
 	);
 
-	if (not png) {
+	if (not context.im.png) {
 		SM_EX_THROW(error, png_could_not_create_write_structure);
 	}
 
-	info = png_create_info_struct(png);
-	if (not info) {
-		png_destroy_write_struct(&png, nullptr);
+	context.im.info = png_create_info_struct(context.im.png);
+	if (not context.im.info) {
+		png_destroy_write_struct(&context.im.png, nullptr);
 		SM_EX_THROW(error, png_could_not_create_info_structure);
 	}
 
 	png_set_IHDR(
-		png, info, context.im.width, context.im.height,
+		context.im.png, context.im.info, context.im.width, context.im.height,
 		context.im.depth, context.im.color, interlacing,
 		PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT
 	);
@@ -56,14 +53,13 @@ void ssmk::make_output_png() {
 			png_could_not_allocate_background_color, 
 			context.out.file
 		);
-	png_color_16& bkgd = *(png_color_16p)context.im.background;
 	int max = 1 << context.im.depth; // max pixel component value
 	if (context.im.color & PNG_COLOR_MASK_COLOR) {
-		bkgd.red =   max * context.out.png.background[0];
-		bkgd.green = max * context.out.png.background[1];
-		bkgd.blue =  max *context.out.png.background[2];
+		context.im.background->red   = max * context.out.png.background[0];
+		context.im.background->green = max * context.out.png.background[1];
+		context.im.background->blue  = max * context.out.png.background[2];
 	} else {
-		bkgd.gray = (
+		context.im.background->gray = (
 			6968  * max * context.out.png.background[0] + 
 			23434 * max * context.out.png.background[1] + 
 			2366  * max * context.out.png.background[2]
@@ -71,12 +67,12 @@ void ssmk::make_output_png() {
 	}
 	if (not (context.im.color & PNG_COLOR_MASK_ALPHA))
 		png_set_bKGD(
-			png, info,
-			&bkgd
+			context.im.png, context.im.info,
+			context.im.background
 		);
 
 	png_set_compression_level(
-		png, context.out.png.compression
+		context.im.png, context.out.png.compression
 	);
 
 	// put comments
@@ -92,20 +88,20 @@ void ssmk::make_output_png() {
 			(char*)sm::version.full.c_str() // sorry
 		}
 	};
-	png_set_text(png, info, text, 2);
+	png_set_text(context.im.png, context.im.info, text, 2);
 
 	// allocate result buffer
 	context.im.rows = new png_bytep[context.im.height];
 	png_bytepp rows = (png_bytepp&)context.im.rows;
 	if (not rows) {
-		png_destroy_write_struct(&png, &info);
+		png_destroy_write_struct(&context.im.png, &context.im.info);
 		SM_EX_THROW(png_error, png_could_not_allocate_output_rows, context.out.file);
 	}
 	for (std::size_t i = 0; i < context.im.height; i++) {
-		rows[i] = new png_byte[png_get_rowbytes(png, info)];
+		rows[i] = new png_byte[png_get_rowbytes(context.im.png, context.im.info)];
 		
 		if (not rows[i]) {
-			png_destroy_write_struct(&png, &info);
+			png_destroy_write_struct(&context.im.png, &context.im.info);
 			for (std::size_t j = 0; j < i; j++)
 				delete rows[j];
 			delete rows;

@@ -1,5 +1,7 @@
 #include <ssmk/ssmk.hpp>
+
 #include <ssmk/exceptions.hpp>
+#include <ssmk/sprite.hpp>
 
 #include <filesystem>
 

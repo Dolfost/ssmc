@@ -19,7 +19,7 @@ void ssmk::read_sprite_headers() {
 	std::FILE* file = nullptr;
 	for (std::size_t i = 0; i < spriteCount; i++) {
 		sprite* const sprt = static_cast<sprite*>(context.im.sprites[i]);
-		png_structp& png = sprt->png().image;
+		png_structp& png  = sprt->png().image;
 		png_infop&   info = sprt->png().info;
 
 		if (not (file = std::fopen(sprt->path().c_str(), "rb")))

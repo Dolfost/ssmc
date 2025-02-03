@@ -12,21 +12,19 @@ void ssmk::write_png() {
 	if (not ofile)
 		SM_EX_THROW(png_error, png_failed_to_open_for_writting, context.out.file);
 
-	png_structp& png = (png_structp&)context.im.png;
-	png_infop& info = (png_infop&)context.im.info;
-	png_bytepp& rows = (png_bytepp&)context.im.rows;
+	png_byte b;
+	png_bytepp p;
+	png_init_io(context.im.png, ofile);
 
-	png_init_io(png, ofile);
-
-	png_write_info(png, info);
+	png_write_info(context.im.png, context.im.info);
 
 	if (m_image_row_written_callback) {
-		int passes = png_set_interlace_handling(png);
+		int passes = png_set_interlace_handling(context.im.png);
 		for (std::size_t p = 0; p < passes; p++)
 			for (std::size_t r = 0; r < context.im.height; r++) {
 				png_write_rows(
-					png,
-					rows,
+					context.im.png,
+					context.im.rows,
 					1
 				);
 				// unfortunatetly we cannot use png_set_write_status_fn...
@@ -35,18 +33,18 @@ void ssmk::write_png() {
 				);
 			}
 	} else
-		png_write_image(png, rows);
+		png_write_image(context.im.png, context.im.rows);
 
-	png_write_end(png, nullptr);
+	png_write_end(context.im.png, nullptr);
 
 	// cleanup
 	for (std::size_t i = 0; i < context.im.height; i++)
-		delete rows[i];
-	delete rows; 
-	rows = nullptr;
+		delete context.im.rows[i];
+	delete context.im.rows; 
+	context.im.rows = nullptr;
 	delete (png_color_16p)context.im.background;
 	context.im.background = nullptr;
-	png_destroy_write_struct(&png, &info);
+	png_destroy_write_struct(&context.im.png, &context.im.info);
 	std::fclose(ofile);
 
 	if (m_png_written_callback) 

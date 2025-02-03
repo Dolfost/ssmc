@@ -1,4 +1,6 @@
 #include <ssmk/ssmk.hpp>
+
+#include <ssmk/sprite.hpp>
 #include <ssmk/exceptions.hpp>
 #include <ssmk/version.hpp>
 
@@ -11,15 +13,12 @@
 namespace sm {
 
 void ssmk::copy_sprites() {
-	png_structp& opng = (png_structp&)context.im.png;
-	png_infop& oinfo = (png_infop&)context.im.info;
-
 	const bool ocol  = context.im.color & PNG_COLOR_MASK_COLOR;
 	const bool oalph = context.im.color & PNG_COLOR_MASK_ALPHA;
 	const bool oplt  = context.im.color & PNG_COLOR_MASK_PALETTE;
 	
 	const std::size_t pixelSize = // some shifting magic :)
-		png_get_channels(opng, oinfo) << (context.im.depth >> 4);
+		png_get_channels(context.im.png, context.im.info) << (context.im.depth >> 4);
 
 	std::size_t spriteCount = context.im.sprites.size();
 	std::FILE* ifile = nullptr;

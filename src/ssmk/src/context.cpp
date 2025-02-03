@@ -1,6 +1,12 @@
 #include <ssmk/context.hpp>
 
+#include <ssmk/sprite.hpp>
+
+#include <calgo/optim/packing2D.hpp>
+
 #include <png.h>
+
+#include <ostream>
 
 namespace sm {
 
@@ -43,9 +49,47 @@ context::intermediate::~intermediate() {
 			delete[] ((png_bytepp)rows)[i];
 	delete[] (png_bytepp)rows; 
 	std::free(chunk);
-	png_structp& p = (png_structp&)png;
-	png_infop& i = (png_infop&)info;
-	png_destroy_write_struct(&p, &i);
+	png_destroy_write_struct(&png, &info);
 }
+
+	std::ostream& operator<<(std::ostream& os, const context& c) {
+		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
+		#define SE(PROP) os << #PROP ": " << static_cast<std::underlying_type<decltype(c.PROP)>::type>(c.PROP) << std::endl;
+		#define SV(PROP) \
+		os << #PROP ": \n"; \
+		for (const auto& r : c.PROP) { \
+			os << "  " << r << '\n'; \
+		}
+
+		SV(in.files);
+
+		S(conf.directory);
+		S(out.file);
+
+		SE(out.pack.alg);
+		SE(out.pack.order);
+		SE(out.pack.metric);
+		S(out.pack.k);
+		SE(out.png.inter);
+		S(out.png.opaque);
+		SV(out.png.background);
+
+		S(conf.file);
+
+		os << "im.sprites" ": \n";
+		for (const auto& r : c.im.sprites) {
+			os << "  " << *static_cast<sprite*>(r) << '\n';
+		}
+		S(im.depth);
+		S(im.color_present);
+		S(im.width);
+		S(im.height);
+
+		return os;
+
+		#undef S
+		#undef SV
+		#undef SE
+	}
 
 }

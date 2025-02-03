@@ -2,7 +2,6 @@
 #define _SSMK_SSMK_HPP_
 
 #include <ssmk/context.hpp>
-#include <ssmk/sprite.hpp>
 
 #include <functional>
 #include <cstddef>
@@ -10,15 +9,15 @@
 
 #define CALLBACK(NAME, ...) \
 	private: \
-		std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)> m_##NAME##_callback; \
+		std::function<void(const context_type& __VA_OPT__(,) __VA_ARGS__)> m_##NAME##_callback; \
 	public: \
-		void set_##NAME##_callback(const std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
+		void set_##NAME##_callback(const std::function<void(const context_type& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
 			m_##NAME##_callback = callback; \
 		} \
-		const std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() const { \
+		const std::function<void(const context_type& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() const { \
 			return m_##NAME##_callback; \
 		} \
-		std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
+		std::function<void(const context_type& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
 			return m_##NAME##_callback; \
 		}
 
@@ -27,11 +26,12 @@ namespace sm {
 class ssmk {
 public:
 	using size_type = std::size_t;
+	using context_type = sm::context;
 
 public:
-	ssmk(const sm::context& context = {}): m_context(context) {};
+	ssmk(const context_type& context = {}): m_context(context) {};
 
-	sm::context& context = m_context;
+	context_type& context = m_context;
 
 public:
 	template<typename P> typename 
@@ -175,7 +175,7 @@ public:
 	constexpr static const char* chunk_name = "ssMK";
 
 private:
-	sm::context m_context;
+	context_type m_context;
 };
 
 #undef CALLBACK

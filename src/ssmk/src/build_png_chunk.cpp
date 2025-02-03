@@ -1,5 +1,7 @@
 #include <ssmk/ssmk.hpp>
 
+#include <ssmk/sprite.hpp>
+
 #include <cstdlib>
 #include <cstddef>
 #include <cstring>
