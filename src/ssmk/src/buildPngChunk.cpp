@@ -32,6 +32,7 @@ void Ssmk::buildPngChunk() {
 
 	m_context.im.chunk = std::malloc(m_context.im.chunkSize);
 
+	const bool call = (bool)s_pngChunkEntryWrittenCallback;
 	std::size_t at = sizeof(std::uint32_t);
 	std::uint32_t x, y, w, h, size, n = m_context.im.sprites.size();
 	*static_cast<std::uint32_t*>(m_context.im.chunk) = htonl(n); // n
@@ -68,6 +69,9 @@ void Ssmk::buildPngChunk() {
 			size
 		);
 		at += size;
+		
+		if (call)
+			s_pngChunkEntryWrittenCallback(*this, i);
 	}
 
 	png_unknown_chunkp chunk = (png_unknown_chunkp)std::malloc(sizeof(png_unknown_chunk));
@@ -85,6 +89,9 @@ void Ssmk::buildPngChunk() {
 		PNG_HANDLE_CHUNK_ALWAYS, 
 		(png_bytep)chunk_name, 1
 	);
+
+	if (s_pngChunkBuiltCallback) 
+		s_pngChunkBuiltCallback(*this);
 }
 
 }

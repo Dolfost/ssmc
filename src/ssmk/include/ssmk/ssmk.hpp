@@ -71,7 +71,7 @@ public:
 		std::size_t sprite
 	)
 	CALLBACK(
-		pngChuckWritten
+		pngChunkBuilt
 	)
 
 	void copySprites();
