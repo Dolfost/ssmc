@@ -18,18 +18,18 @@ void ssmk::read_sprite_headers() {
 
 	std::FILE* file = nullptr;
 	for (std::size_t i = 0; i < spriteCount; i++) {
-		Sprite* const sprite = static_cast<Sprite*>(context.im.sprites[i]);
-		png_structp& png = sprite->png().image;
-		png_infop&   info = sprite->png().info;
+		sprite* const sprt = static_cast<sprite*>(context.im.sprites[i]);
+		png_structp& png = sprt->png().image;
+		png_infop&   info = sprt->png().info;
 
-		if (not (file = std::fopen(sprite->path().c_str(), "rb")))
-			SM_EX_THROW(PngError, PngFailedToOpenForReading, sprite->path());
+		if (not (file = std::fopen(sprt->path().c_str(), "rb")))
+			SM_EX_THROW(png_error, png_failed_to_open_for_reading, sprt->path());
 
 		std::memset(signature, 0, sigLen);
 		std::fread(signature, 1, sigLen, file);
 		if (not png_check_sig(signature, 8)) {
 			std::fclose(file);
-			SM_EX_THROW(PngError, PngBadSignature, sprite->path());
+			SM_EX_THROW(png_error, png_bad_signature, sprt->path());
 		}
 
 		png = png_create_read_struct(
@@ -38,13 +38,13 @@ void ssmk::read_sprite_headers() {
 		);
 		if (not png) {
 			std::fclose(file);
-			SM_EX_THROW(PngError, PngCouldNotCreateReadStructure, sprite->path());
+			SM_EX_THROW(png_error, png_could_not_create_read_structure, sprt->path());
 		}
 
 		info = png_create_info_struct(png);
 		if (not info) {
 			std::fclose(file);
-			SM_EX_THROW(PngError, PngCouldNotCreateInfoStructure, sprite->path());
+			SM_EX_THROW(png_error, png_could_not_create_info_structure, sprt->path());
 		}
 
 		png_init_io(png, file);
@@ -60,14 +60,14 @@ void ssmk::read_sprite_headers() {
 		);
 
 		// or's current image with all input
-		context.im.colorPresent   += bool(color & PNG_COLOR_MASK_COLOR);
-		context.im.palettePresent += bool(color & PNG_COLOR_MASK_PALETTE);
-		context.im.alphaPresent   += bool(color & PNG_COLOR_MASK_ALPHA);
-		context.im.tRNSPresent    += bool(png_get_valid(png, info, PNG_INFO_tRNS));
+		context.im.color_present   += bool(color & PNG_COLOR_MASK_COLOR);
+		context.im.palette_present += bool(color & PNG_COLOR_MASK_PALETTE);
+		context.im.alpha_present   += bool(color & PNG_COLOR_MASK_ALPHA);
+		context.im.tRNS_present    += bool(png_get_valid(png, info, PNG_INFO_tRNS));
 		context.im.depth          =  std::max(context.im.depth, depth);
 
-		sprite->setSize({width, height});
-		sprite->png().pos = std::ftell(file);
+		sprt->setSize({width, height});
+		sprt->png().pos = std::ftell(file);
 		png_init_io(png, nullptr);
 		std::fclose(file);
 

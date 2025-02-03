@@ -24,14 +24,14 @@ void ssmk::copy_sprites() {
 	std::size_t spriteCount = context.im.sprites.size();
 	std::FILE* ifile = nullptr;
 	for (int i = 0; i < spriteCount; i++) {
-		Sprite* const sprite = static_cast<Sprite*>(context.im.sprites[i]);
-		png_infop&   info = sprite->png().info;
-		png_structp& png = sprite->png().image;
+		sprite* const sprt = static_cast<sprite*>(context.im.sprites[i]);
+		png_infop&   info = sprt->png().info;
+		png_structp& png = sprt->png().image;
 
-		ifile = std::fopen(sprite->path().c_str(), "rb");
+		ifile = std::fopen(sprt->path().c_str(), "rb");
 		if (not ifile)
-			SM_EX_THROW(PngError, PngFailedToOpenForReading, sprite->path());
-		std::fseek(ifile, sprite->png().pos, SEEK_SET);
+			SM_EX_THROW(png_error, png_failed_to_open_for_reading, sprt->path());
+		std::fseek(ifile, sprt->png().pos, SEEK_SET);
 		png_init_io(png, ifile);
 
 		int depth, color;
@@ -75,10 +75,10 @@ void ssmk::copy_sprites() {
 		png_bytepp rows = (png_bytepp)context.im.rows;
 		if (m_sprite_row_copied_callback) {
 			for (std::size_t p = 0; p < passes; p++)
-				for (std::size_t r = 0; r < sprite->size().height(); r++) {
+				for (std::size_t r = 0; r < sprt->size().height(); r++) {
 					png_read_row(
 						png,
-						rows[sprite->y() + r] + sprite->x()*pixelSize, 
+						rows[sprt->y() + r] + sprt->x()*pixelSize, 
 						nullptr
 					);
 					// unfortunatetly we cannot use png_set_read_status_fn...
@@ -88,10 +88,10 @@ void ssmk::copy_sprites() {
 				}
 		} else {
 			for (std::size_t p = 0; p < passes; p++)
-				for (std::size_t r = 0; r < sprite->size().height(); r++)
+				for (std::size_t r = 0; r < sprt->size().height(); r++)
 					png_read_row(
 						png,
-						rows[sprite->y() + r] + sprite->x()*pixelSize, 
+						rows[sprt->y() + r] + sprt->x()*pixelSize, 
 						nullptr
 					);
 		}

@@ -16,28 +16,28 @@
 namespace sm {
 
 void ssmk::build_png_chunk() {
-	m_context.im.chunkSize = sizeof(std::uint32_t);
+	m_context.im.chunk_size = sizeof(std::uint32_t);
 	std::vector<std::string> paths;
 	paths.reserve(m_context.im.sprites.size());
 	for (const auto& p: m_context.im.sprites) {
 		paths.push_back(
 			std::filesystem::path(
-				static_cast<Sprite*>(p)->path().lexically_relative(
+				static_cast<sprite*>(p)->path().lexically_relative(
 					m_context.conf.directory
 				)
 			).replace_extension("").generic_string()
 		);
-		m_context.im.chunkSize += paths.back().length() + 1 + 4*sizeof(std::uint32_t);
+		m_context.im.chunk_size += paths.back().length() + 1 + 4*sizeof(std::uint32_t);
 	}
 
-	m_context.im.chunk = std::malloc(m_context.im.chunkSize);
+	m_context.im.chunk = std::malloc(m_context.im.chunk_size);
 
 	const bool call = (bool)m_png_chunk_entry_written_callback;
 	std::size_t at = sizeof(std::uint32_t);
 	std::uint32_t x, y, w, h, size, n = m_context.im.sprites.size();
 	*static_cast<std::uint32_t*>(m_context.im.chunk) = htonl(n); // n
 	for (std::vector<std::string>::size_type i = 0; i < paths.size(); i++) {
-		const Sprite* s = static_cast<Sprite*>(m_context.im.sprites[i]);
+		const sprite* s = static_cast<sprite*>(m_context.im.sprites[i]);
 
 		x = htonl(s->x()), y = htonl(s->y()), w = htonl(s->size().width()), h = htonl(s->size().height());
 		std::memcpy( // x
@@ -81,7 +81,7 @@ void ssmk::build_png_chunk() {
 		5
 	);
 	chunk->data = (png_bytep)m_context.im.chunk;
-	chunk->size = m_context.im.chunkSize;
+	chunk->size = m_context.im.chunk_size;
 	chunk->location = PNG_HAVE_PLTE; // write chunk before IDAT
 	png_set_unknown_chunks((png_structp)m_context.im.png, (png_infop)m_context.im.info, chunk, 1);
 	png_set_keep_unknown_chunks(

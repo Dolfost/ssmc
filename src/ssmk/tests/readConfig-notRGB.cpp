@@ -7,15 +7,15 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/projects/notRGB";
 	try {
 		s.read_config();
-	} catch (sm::ex::ConfigUnexpectedFieldValue& ex) {
+	} catch (sm::ex::config_unexpected_field_value& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
-		return ex.code() == sm::ex::code::ConfigNotRGB ? sm::ex::code::Good : sm::ex::code::Bad;
-	} catch (sm::ex::Error& ex) {
+		return ex.code() == sm::ex::code::config_not_RGB ? sm::ex::code::good : sm::ex::code::bad;
+	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": " << std::endl;
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	}
 
 	std::cout << "No exceptions";
 
-	return sm::ex::code::Bad;
+	return sm::ex::code::bad;
 }

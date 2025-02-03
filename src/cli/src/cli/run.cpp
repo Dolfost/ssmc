@@ -25,10 +25,10 @@ int Application::run(int argc, const char** argv) {
 
 	try {
 		a_ssmk();
-	} catch (sm::ex::ConfigFieldError& ex) {
+	} catch (sm::ex::config_field_error& ex) {
 		std::cerr << ex.what() << ": " << ex.description() << ": " << ex.field() << std::endl;
 		code = ex.code();
-	} catch (sm::ex::Error& ex) {
+	} catch (sm::ex::error& ex) {
 		std::cerr << ex.what() << ": " << ex.description() << std::endl;
 		code = ex.code();
 	} catch (std::exception& ex) {

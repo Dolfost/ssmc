@@ -9,7 +9,7 @@
 namespace sm {
 
 #define RETHROW_TOML_EX() \
-throw sm::ex::TomlError( \
+throw sm::ex::toml_error( \
 	context.conf.file, \
 	{ ex.source().begin.line, ex.source().begin.column }, \
 	{ ex.source().begin.line, ex.source().begin.column }, \
@@ -27,7 +27,7 @@ void ssmk::fill_context(sm::context& context) {
 	context.conf.directory = 
 		std::filesystem::absolute(context.conf.directory);
 	if (not std::filesystem::is_directory(context.conf.directory))
-		SM_EX_THROW(FileError, SourceDirectoryNotFound, context.conf.directory)
+		SM_EX_THROW(file_error, source_directory_not_found, context.conf.directory)
 
 	for (const auto& filename: configFilenames) {
 		if (std::filesystem::is_regular_file(context.conf.directory / filename)) {
@@ -36,7 +36,7 @@ void ssmk::fill_context(sm::context& context) {
 		}
 	}
 	if (context.conf.file.empty())
-		SM_EX_THROW(FileError, ConfigNotFound, context.conf.file)
+		SM_EX_THROW(file_error, config_not_found, context.conf.file)
 
 	toml::table table;
 	try {
@@ -47,32 +47,32 @@ void ssmk::fill_context(sm::context& context) {
 
 	toml::table* inputTable = table["input"].as_table();
 	if (not inputTable)
-		SM_EX_THROW(ConfigFieldError, ConfigNoInputTable, context.conf.file, "input")
+		SM_EX_THROW(config_field_error, config_no_input_table, context.conf.file, "input")
 
 	toml::array* filesArray = (*inputTable)["files"].as_array();
 	if (not filesArray)
-		SM_EX_THROW(ConfigFieldError, ConfigNoInputFileArray, context.conf.file, "input.files")
+		SM_EX_THROW(config_field_error, config_no_input_file_array, context.conf.file, "input.files")
 	filesArray->for_each([&context](auto&& e) {
 		if constexpr (toml::is_string<decltype(e)>) {
 			std::filesystem::path path = e.as_string()->get();
 			if (path.is_relative())
 				path = context.conf.directory / path;
 			if (not (std::filesystem::is_regular_file(path) or std::filesystem::is_directory(path)))
-				SM_EX_THROW(ConfigFieldError, NotAFileOrDirectory, path, "input.files")
+				SM_EX_THROW(config_field_error, not_a_file_or_directory, path, "input.files")
 
 			context.in.files.push_back(path);
 		} else {
-			SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.conf.file, "input.files", "array", "array<string>")
+			SM_EX_THROW(config_wrong_field_type, config_wrong_field_type, context.conf.file, "input.files", "array", "array<string>")
 		}
 	});
 
 	toml::table* outputTable = table["output"].as_table();
 	if (not outputTable)
-		SM_EX_THROW(ConfigFieldError, ConfigNoOutputTable, context.conf.file, "output")
+		SM_EX_THROW(config_field_error, config_no_output_table, context.conf.file, "output")
 
 	std::optional<std::string> outputFile = (*outputTable)["file"].value<std::string>();
 	if (not outputFile)
-		SM_EX_THROW(ConfigFieldError, ConfigNoOutputFile, context.conf.file, "output.file")
+		SM_EX_THROW(config_field_error, config_no_output_file, context.conf.file, "output.file")
 
 	context.out.file = context.conf.directory / *outputFile;
 
@@ -82,23 +82,23 @@ void ssmk::fill_context(sm::context& context) {
 		std::optional<std::string> algorithm = (*packingTable)["algorithm"].value<std::string>();
 		if (algorithm) {
 			context.out.pack.alg = 
-				context::output::packing::algorithm::None;
-			for (const auto& [k, v]: context::output::packing::algorithmText) {
+				context::output::packing::algorithm::none;
+			for (const auto& [k, v]: context::output::packing::algorithm_text) {
 				if (k == *algorithm) {
 					context.out.pack.alg = v;
 					break;
 				}
 			}
-			if (context.out.pack.alg == context::output::packing::algorithm::None)
+			if (context.out.pack.alg == context::output::packing::algorithm::none)
 				SM_EX_THROW(
-					ConfigUnexpectedFieldValue, ConfigUnknownPackingAlgorithm,
+					config_unexpected_field_value, config_unknown_packing_algorithm,
 					context.conf.file, "output.packing.algorithm", *algorithm,
-					context::output::packing::algorithmText
+					context::output::packing::algorithm_text
 				)
 		}
 		std::optional<std::string> order = (*packingTable)["order"].value<std::string>();
 		if (order) {
-			for (const auto& [k, v]: context::output::packing::orderText) {
+			for (const auto& [k, v]: context::output::packing::order_text) {
 				if (k == *order) {
 					context.out.pack.order = v;
 					break;
@@ -108,24 +108,24 @@ void ssmk::fill_context(sm::context& context) {
 		std::optional<std::string> metric = (*packingTable)["metric"].value<std::string>();
 		if (metric) {
 			context.out.pack.metric = 
-				context::output::packing::SortingMetric::None;
-			for (const auto& [k, v]: context::output::packing::metricText) {
+				context::output::packing::sorting_metric::none;
+			for (const auto& [k, v]: context::output::packing::metric_text) {
 				if (k == *metric) {
 					context.out.pack.metric = v;
 					break;
 				}
 			}
-			if (context.out.pack.metric == context::output::packing::SortingMetric::None)
+			if (context.out.pack.metric == context::output::packing::sorting_metric::none)
 				SM_EX_THROW(
-					ConfigUnexpectedFieldValue, ConfigUnknownPackingMetric,
+					config_unexpected_field_value, config_unknown_packing_metric,
 					context.conf.file, "output.packing.metric", *metric,
-					context::output::packing::metricText
+					context::output::packing::metric_text
 				)
 		}
-		if (context.out.pack.alg == context::output::packing::algorithm::TreeFit and 
-			context.out.pack.order != context::output::packing::Ordering::Decreasing)
+		if (context.out.pack.alg == context::output::packing::algorithm::tree_fit and 
+			context.out.pack.order != context::output::packing::ordering::decreasing)
 				SM_EX_THROW(
-					ConfigExclusiveFieldValues, ConfigIncreasingTreeFitPacking,
+					config_exclusive_field_values, config_increasing_tree_fit_packing,
 					context.conf.file, "output.packing.algorithm", "treeFit",
 					"output.packing.order", *order
 				)
@@ -133,8 +133,8 @@ void ssmk::fill_context(sm::context& context) {
 		if (k) {
 			if (*k <= 0)
 				SM_EX_THROW(
-					ConfigUnexpectedFieldValue, 
-					ConfigUnexpectedFieldValue, 
+					config_unexpected_field_value, 
+					config_unexpected_field_value, 
 					context.conf.file,
 					"output.packing.k",
 					std::to_string(*k),
@@ -152,9 +152,9 @@ void ssmk::fill_context(sm::context& context) {
 			context.out.png.opaque = *opaque;
 		std::optional<std::string> interlacing = (*pngTable)["interlacing"].value<std::string>();
 		if (interlacing) {
-			for (const auto& [k, v]: context::output::png_info::interlacingText) {
+			for (const auto& [k, v]: context::output::png_info::interlacing_text) {
 				if (k == *interlacing) {
-					context.out.png.interlacing = v;
+					context.out.png.inter = v;
 					break;
 				}
 			}
@@ -163,8 +163,8 @@ void ssmk::fill_context(sm::context& context) {
 		if (backgroundArray) {
 			if (backgroundArray->size() != 3)
 				SM_EX_THROW(
-					ConfigWrongFieldType, 
-					ConfigWrongFieldType,
+					config_wrong_field_type, 
+					config_wrong_field_type,
 					context.conf.file,
 					"output.png.background",
 					"array[" + std::to_string(backgroundArray->size()) + "]",
@@ -175,8 +175,8 @@ void ssmk::fill_context(sm::context& context) {
 				if constexpr (toml::is_number<decltype(e)>) {
 					if (e.get() < 0 or e.get() > 1) {
 						SM_EX_THROW(
-							ConfigUnexpectedFieldValue, 
-							ConfigNotRGB, 
+							config_unexpected_field_value, 
+							config_not_RGB, 
 							context.conf.file, 
 							"output.png.background", 
 							std::to_string(e.get()), std::string("[0;1]")
@@ -184,7 +184,7 @@ void ssmk::fill_context(sm::context& context) {
 					}
 					context.out.png.background[idx++] = e.get();
 				} else {
-					SM_EX_THROW(ConfigWrongFieldType, ConfigWrongFieldType, context.conf.file, "output.png.background", "array", "array<doublg>")
+					SM_EX_THROW(config_wrong_field_type, config_wrong_field_type, context.conf.file, "output.png.background", "array", "array<doublg>")
 				}
 			});
 		}
@@ -192,8 +192,8 @@ void ssmk::fill_context(sm::context& context) {
 		if (compression)  {
 			if (*compression < 0 or *compression > 9)
 				SM_EX_THROW(
-					ConfigUnexpectedFieldValue, 
-					ConfigUnknownCompressionLevel, 
+					config_unexpected_field_value, 
+					config_unknown_compression_level, 
 					context.conf.file, 
 					"output.png.compression", 
 					std::to_string(*compression), std::string("[0;9]")

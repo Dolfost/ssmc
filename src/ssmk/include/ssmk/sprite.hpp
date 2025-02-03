@@ -13,34 +13,34 @@ typedef png_info* png_infop;
 
 namespace sm {
 
-class Sprite: public ca::optim::Box2D<std::size_t> {
+class sprite: public ca::optim::Box2D<std::size_t> {
 public:
-	struct Png {
+	struct png_info {
 		png_structp image = nullptr;
 		png_infop info = nullptr;
 		std::size_t pos = 0;
-		~Png();
+		~png_info();
 	};
 public:
 	using ca::optim::Box2D<std::size_t>::Box2D;
 
-	 void setPath(const std::filesystem::path& path) {
-		s_path = path;
+	 void set_path(const std::filesystem::path& path) {
+		m_path = path;
 	}
 	const std::filesystem::path& path() const {
-		return s_path;
+		return m_path;
 	}
-	Png& png() {
-		return s_png;
+	png_info& png() {
+		return m_png;
 	}
 
-	friend std::ostream& operator<<(std::ostream& os, const Sprite& s) {
+	friend std::ostream& operator<<(std::ostream& os, const sprite& s) {
 		return os << static_cast<ca::optim::Box2D<std::size_t>>(s)
-		<< " in " << s.s_path;
+		<< " in " << s.m_path;
 	};
 private:
-	std::filesystem::path s_path;
-	Png s_png;
+	std::filesystem::path m_path;
+	png_info m_png;
 };
 
 }

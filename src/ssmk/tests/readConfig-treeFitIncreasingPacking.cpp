@@ -7,11 +7,11 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/projects/treeFitIncreasingPacking";
 	try {
 		s.read_config();
-	} catch (sm::ex::ConfigExclusiveFieldValues& ex) {
-		return ex.code() == sm::ex::code::ConfigIncreasingTreeFitPacking ? sm::ex::code::Good : sm::ex::code::Bad;
+	} catch (sm::ex::config_exclusive_field_values& ex) {
+		return ex.code() == sm::ex::code::config_increasing_tree_fit_packing ? sm::ex::code::good : sm::ex::code::bad;
 	}
 
 	std::cout << "General";
 
-	return sm::ex::code::Bad;
+	return sm::ex::code::bad;
 }

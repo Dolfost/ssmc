@@ -12,18 +12,18 @@ void ssmk::make_output_png() {
 
 	context.im.color = 0;
 	// expand all to rgb if required
-	if (context.im.colorPresent)
+	if (context.im.color_present)
 		context.im.color |= PNG_COLOR_MASK_COLOR;
-	if ((context.im.alphaPresent or context.im.tRNSPresent) and not 
+	if ((context.im.alpha_present or context.im.tRNS_present) and not 
 		context.out.png.opaque)
 		context.im.color |= PNG_COLOR_MASK_ALPHA;
 
 	int interlacing;
-	switch (context.out.png.interlacing) {
-		case context::output::png_info::Interlacing::None:
+	switch (context.out.png.inter) {
+		case context::output::png_info::interlacing::none:
 			interlacing = PNG_INTERLACE_NONE;
 			break;
-		case context::output::png_info::Interlacing::Adam7:
+		case context::output::png_info::interlacing::adam7:
 			interlacing = PNG_INTERLACE_ADAM7;
 			break;
 	}
@@ -34,13 +34,13 @@ void ssmk::make_output_png() {
 	);
 
 	if (not png) {
-		SM_EX_THROW(Error, PngCouldNotCreateWriteStructure);
+		SM_EX_THROW(error, png_could_not_create_write_structure);
 	}
 
 	info = png_create_info_struct(png);
 	if (not info) {
 		png_destroy_write_struct(&png, nullptr);
-		SM_EX_THROW(Error, PngCouldNotCreateInfoStructure);
+		SM_EX_THROW(error, png_could_not_create_info_structure);
 	}
 
 	png_set_IHDR(
@@ -52,8 +52,8 @@ void ssmk::make_output_png() {
 	context.im.background = new png_color_16;
 	if (not context.im.background)
 		SM_EX_THROW(
-			PngError, 
-			PngCouldNotAllocateBackgroundColor, 
+			png_error, 
+			png_could_not_allocate_background_color, 
 			context.out.file
 		);
 	png_color_16& bkgd = *(png_color_16p)context.im.background;
@@ -99,7 +99,7 @@ void ssmk::make_output_png() {
 	png_bytepp rows = (png_bytepp&)context.im.rows;
 	if (not rows) {
 		png_destroy_write_struct(&png, &info);
-		SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.out.file);
+		SM_EX_THROW(png_error, png_could_not_allocate_output_rows, context.out.file);
 	}
 	for (std::size_t i = 0; i < context.im.height; i++) {
 		rows[i] = new png_byte[png_get_rowbytes(png, info)];
@@ -110,7 +110,7 @@ void ssmk::make_output_png() {
 				delete rows[j];
 			delete rows;
 			rows = nullptr;
-			SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.out.file);
+			SM_EX_THROW(png_error, png_could_not_allocate_output_rows, context.out.file);
 		}
 	}
 

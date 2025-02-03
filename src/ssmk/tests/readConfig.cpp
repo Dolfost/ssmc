@@ -9,8 +9,8 @@ int main(int argc, char** argv) {
 		s.read_config();
 	} catch (std::exception& ex) {
 		std::cout << ex.what();
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	}
 
-	return sm::ex::code::Good;
+	return sm::ex::code::good;
 }

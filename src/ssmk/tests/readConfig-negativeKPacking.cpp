@@ -7,14 +7,14 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/projects/negativeKPacking";
 	try {
 		s.read_config();
-	} catch (sm::ex::ConfigUnexpectedFieldValue& ex) {
+	} catch (sm::ex::config_unexpected_field_value& ex) {
 		std::cout << ex.path() <<  ": " << ex.what() 
 			<< ": " << ex.description() << ": " << ex.field() 
 			<< " = " << ex.value() << ", expected " << ex.expected();
-		return sm::ex::code::Good;
+		return sm::ex::code::good;
 	}
 
 	std::cout << "General";
 
-	return sm::ex::code::Bad;
+	return sm::ex::code::bad;
 }

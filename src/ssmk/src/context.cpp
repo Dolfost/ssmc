@@ -5,33 +5,33 @@
 namespace sm {
 
 const std::unordered_map<std::string, context::output::packing::algorithm> 
-	context::output::packing::algorithmText {
-	{ "firstFit", context::output::packing::algorithm::FirstFit },
-	{ "nextFit",  context::output::packing::algorithm::NextFit },
-	{ "treeFit",  context::output::packing::algorithm::TreeFit },
+	context::output::packing::algorithm_text {
+	{ "firstFit", context::output::packing::algorithm::first_fit },
+	{ "nextFit",  context::output::packing::algorithm::next_fit },
+	{ "treeFit",  context::output::packing::algorithm::tree_fit },
 };
 
-const std::unordered_map<std::string, context::output::packing::Ordering> 
-	context::output::packing::orderText {
-	{ "none",       context::output::packing::Ordering::None },
-	{ "decreasing", context::output::packing::Ordering::Decreasing },
-	{ "increasing", context::output::packing::Ordering::Increasing },
+const std::unordered_map<std::string, context::output::packing::ordering> 
+	context::output::packing::order_text {
+	{ "none",       context::output::packing::ordering::none },
+	{ "decreasing", context::output::packing::ordering::decreasing },
+	{ "increasing", context::output::packing::ordering::increasing },
 };
 
-const std::unordered_map<std::string, context::output::packing::SortingMetric> 
-	context::output::packing::metricText {
-	{ "width",     context::output::packing::SortingMetric::Width },
-	{ "height",    context::output::packing::SortingMetric::Height },
-	{ "maxSide",   context::output::packing::SortingMetric::MaxSide },
-	{ "minSide",   context::output::packing::SortingMetric::MinSide },
-	{ "perimeter", context::output::packing::SortingMetric::Perimeter },
-	{ "area",      context::output::packing::SortingMetric::Area },
+const std::unordered_map<std::string, context::output::packing::sorting_metric> 
+	context::output::packing::metric_text {
+	{ "width",     context::output::packing::sorting_metric::width },
+	{ "height",    context::output::packing::sorting_metric::height },
+	{ "maxSide",   context::output::packing::sorting_metric::max_side },
+	{ "minSide",   context::output::packing::sorting_metric::min_side },
+	{ "perimeter", context::output::packing::sorting_metric::perimeter },
+	{ "area",      context::output::packing::sorting_metric::area },
 };
 
-const std::unordered_map<std::string, context::output::png_info::Interlacing> 
-	context::output::png_info::interlacingText {
-	{ "none",     context::output::png_info::Interlacing::None },
-	{ "adam7",     context::output::png_info::Interlacing::Adam7 },
+const std::unordered_map<std::string, context::output::png_info::interlacing> 
+	context::output::png_info::interlacing_text {
+	{ "none",     context::output::png_info::interlacing::none },
+	{ "adam7",     context::output::png_info::interlacing::adam7 },
 };
 
 context::intermediate::~intermediate() {

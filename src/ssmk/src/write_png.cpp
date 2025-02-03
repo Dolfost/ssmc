@@ -10,7 +10,7 @@ void ssmk::write_png() {
 	std::FILE* ofile = 
 		std::fopen(context.out.file.c_str(), "wb");
 	if (not ofile)
-		SM_EX_THROW(PngError, PngFailedToOpenForWritting, context.out.file);
+		SM_EX_THROW(png_error, png_failed_to_open_for_writting, context.out.file);
 
 	png_structp& png = (png_structp&)context.im.png;
 	png_infop& info = (png_infop&)context.im.info;

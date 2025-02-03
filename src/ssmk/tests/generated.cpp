@@ -7,13 +7,13 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/projects/generated";
 	try {
 		s();
-	} catch (sm::ex::Error& ex) {
+	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description();
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	} catch (std::exception& ex) {
 		std::cout << ex.what();
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	}
 
-	return sm::ex::code::Good;
+	return sm::ex::code::good;
 }

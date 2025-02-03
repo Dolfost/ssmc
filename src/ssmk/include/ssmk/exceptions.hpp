@@ -16,143 +16,143 @@ throw sm::ex::EX( \
 namespace sm::ex {
 
 namespace code {
-enum Type {
-	Good = EXIT_SUCCESS, 
-	Bad = EXIT_FAILURE, // Error class
+enum type {
+	good = EXIT_SUCCESS, 
+	bad = EXIT_FAILURE, // Error class
 
-	SsmkErrorSpaceStart = 1400,
+	ssmk_error_space_start = 1400,
 
-	NoSpritesFound,
-	NoPackingAlgorithm,
-	NoPackingMetric,
-	NotDecreasingTreeFitPacking,
+	no_sprites_found,
+	no_packing_algorithm,
+	no_packing_metric,
+	not_decreasing_tree_fit_packing,
 
-	FileError, // class from Error
-	ConfigNotFound,
-	SourceDirectoryNotFound,
-	NotAFileOrDirectory,
+	file_error, // class from Error
+	config_not_found,
+	source_directory_not_found,
+	not_a_file_or_directory,
 
-	PngError, // class from FileError
-	PngFailedToOpenForReading,
-	PngFailedToOpenForWritting,
-	PngBadSignature,
-	PngCouldNotCreateReadStructure,
-	PngCouldNotCreateWriteStructure,
-	PngCouldNotCreateInfoStructure,
-	PngCouldNotAllocateOutputRows,
-	PngCouldNotAllocateBackgroundColor,
+	png_error, // class from FileError
+	png_failed_to_open_for_reading,
+	png_failed_to_open_for_writting,
+	png_bad_signature,
+	png_could_not_create_read_structure,
+	png_could_not_create_write_structure,
+	png_could_not_create_info_structure,
+	png_could_not_allocate_output_rows,
+	png_could_not_allocate_background_color,
 
-	TomlError, // class from FileError
+	toml_error, // class from FileError
 
-	ConfigError, // class from FileError
-	ConfigFieldError, // class from FileError
-	ConfigNoInputTable,
-	ConfigNoOutputTable,
-	ConfigNoInputFileArray,
-	ConfigNoOutputFile,
-	ConfigWrongFieldType, // class from FieldError
-	ConfigUnexpectedFieldValue, // class from FieldError
-	ConfigUnknownPackingAlgorithm,
-	ConfigUnknownPackingMetric,
-	ConfigNotRGB,
-	ConfigUnknownCompressionLevel,
-	ConfigExclusiveFieldValues, // class from FieldError
-	ConfigIncreasingTreeFitPacking,
+	config_error, // class from FileError
+	config_field_error, // class from FileError
+	config_no_input_table,
+	config_no_output_table,
+	config_no_input_file_array,
+	config_no_output_file,
+	config_wrong_field_type, // class from FieldError
+	config_unexpected_field_value, // class from FieldError
+	config_unknown_packing_algorithm,
+	config_unknown_packing_metric,
+	config_not_RGB,
+	config_unknown_compression_level,
+	config_exclusive_field_values, // class from FieldError
+	config_increasing_tree_fit_packing,
 	
-	SsmkErrorSpaceEnd,
+	ssmk_error_space_end,
 };
-static const std::unordered_map<Type, const std::string> text = {
-	{ Good, "" },
-	{ Bad, "SSMK error"},
+static const std::unordered_map<type, const std::string> text = {
+	{ good, "" },
+	{ bad, "SSMK error"},
 
-	{ SsmkErrorSpaceStart, "SSMK error space start" },
+	{ ssmk_error_space_start, "SSMK error space start" },
 
-	{ NoSpritesFound, "no sprites found" },
+	{ no_sprites_found, "no sprites found" },
 
-	{ NoPackingAlgorithm, "no packing algorithm" },
-	{ NoPackingMetric, "no packing metric" },
-	{ NotDecreasingTreeFitPacking, "increasing tree fit packing" },
+	{ no_packing_algorithm, "no packing algorithm" },
+	{ no_packing_metric, "no packing metric" },
+	{ not_decreasing_tree_fit_packing, "increasing tree fit packing" },
 
-	{ FileError, "file error" },
-	{ ConfigNotFound, "config not found" },
-	{ SourceDirectoryNotFound, "source directory not found" },
-	{ NotAFileOrDirectory, "not a file or directory" },
+	{ file_error, "file error" },
+	{ config_not_found, "config not found" },
+	{ source_directory_not_found, "source directory not found" },
+	{ not_a_file_or_directory, "not a file or directory" },
 
-	{ PngError, "png error" },
-	{ PngFailedToOpenForReading, "failed to open image for reading" },
-	{ PngFailedToOpenForWritting, "failed to open image for writting" },
-	{ PngBadSignature, "image signature does not match a png" },
-	{ PngCouldNotCreateReadStructure, "could not create read structure" },
-	{ PngCouldNotCreateWriteStructure, "could not create write structure" },
-	{ PngCouldNotCreateInfoStructure, "could not create info structure" },
-	{ PngCouldNotAllocateOutputRows, "could not allocate memory for output image" },
-	{ PngCouldNotAllocateBackgroundColor, "could not allocate background color" },
+	{ png_error, "png error" },
+	{ png_failed_to_open_for_reading, "failed to open image for reading" },
+	{ png_failed_to_open_for_writting, "failed to open image for writting" },
+	{ png_bad_signature, "image signature does not match a png" },
+	{ png_could_not_create_read_structure, "could not create read structure" },
+	{ png_could_not_create_write_structure, "could not create write structure" },
+	{ png_could_not_create_info_structure, "could not create info structure" },
+	{ png_could_not_allocate_output_rows, "could not allocate memory for output image" },
+	{ png_could_not_allocate_background_color, "could not allocate background color" },
 
-	{ TomlError, "toml parse failed" },
+	{ toml_error, "toml parse failed" },
 
-	{ ConfigError, "config error" },
-	{ ConfigFieldError, "field error" },
-	{ ConfigNoInputTable, "input table not defined" },
-	{ ConfigNoOutputTable, "output table not defined" },
-	{ ConfigNoInputFileArray, "input file array not defined" },
-	{ ConfigNoOutputFile, "output file not specified" },
-	{ ConfigWrongFieldType, "unexpected type" },
-	{ ConfigUnexpectedFieldValue, "unexpected value" },
-	{ ConfigUnknownPackingAlgorithm, "unknown packing algorithm" },
-	{ ConfigUnknownPackingMetric, "unknown packing metric" },
-	{ ConfigNotRGB, "invalid RGB value" },
-	{ ConfigExclusiveFieldValues, "exclusive values" },
-	{ ConfigIncreasingTreeFitPacking, "increasing first fit packing is forbidden" },
-	{ ConfigUnknownCompressionLevel, "unknown compression level" },
+	{ config_error, "config error" },
+	{ config_field_error, "field error" },
+	{ config_no_input_table, "input table not defined" },
+	{ config_no_output_table, "output table not defined" },
+	{ config_no_input_file_array, "input file array not defined" },
+	{ config_no_output_file, "output file not specified" },
+	{ config_wrong_field_type, "unexpected type" },
+	{ config_unexpected_field_value, "unexpected value" },
+	{ config_unknown_packing_algorithm, "unknown packing algorithm" },
+	{ config_unknown_packing_metric, "unknown packing metric" },
+	{ config_not_RGB, "invalid RGB value" },
+	{ config_exclusive_field_values, "exclusive values" },
+	{ config_increasing_tree_fit_packing, "increasing first fit packing is forbidden" },
+	{ config_unknown_compression_level, "unknown compression level" },
 
-	{ SsmkErrorSpaceEnd, "SSMK error space end" },
+	{ ssmk_error_space_end, "SSMK error space end" },
 };
 }
 
-class Error: public std::runtime_error {
+class error: public std::runtime_error {
 public:
-	Error(
+	error(
 		const std::string& description, 
-		code::Type code = code::Bad,
-		const std::string& what = code::text.at(code::Bad)
-	): std::runtime_error(what), e_code(code), e_description(description) {};
-	code::Type code() { return e_code; }
-	const std::string& description() { return e_description; };
+		code::type code = code::bad,
+		const std::string& what = code::text.at(code::bad)
+	): std::runtime_error(what), m_code(code), m_description(description) {};
+	code::type code() { return m_code; }
+	const std::string& description() { return m_description; };
 
 private:
-	code::Type e_code;
-	std::string e_description;
+	code::type m_code;
+	std::string m_description;
 };
 
-class FileError: public Error {
+class file_error: public error {
 public:
-	FileError(
+	file_error(
 		const std::filesystem::path& path,
-		const std::string& description = code::text.at(code::FileError),
-		code::Type code = code::FileError,
-		const std::string& what = code::text.at(code::FileError)
-	): Error(description, code, what), e_path(path) {};
+		const std::string& description = code::text.at(code::file_error),
+		code::type code = code::file_error,
+		const std::string& what = code::text.at(code::file_error)
+	): error(description, code, what), m_path(path) {};
 	const std::filesystem::path& path() {
-		return e_path;
+		return m_path;
 	}
 private:
-	std::filesystem::path e_path;
+	std::filesystem::path m_path;
 };
 
-class PngError: public FileError {
+class png_error: public file_error {
 public:
-	PngError(
+	png_error(
 		const std::filesystem::path& path,
-		const std::string& description = code::text.at(code::PngError),
-		code::Type code = code::FileError,
-		const std::string& what = code::text.at(code::PngError)
-	): FileError(path, description, code, what) {};
+		const std::string& description = code::text.at(code::png_error),
+		code::type code = code::file_error,
+		const std::string& what = code::text.at(code::png_error)
+	): file_error(path, description, code, what) {};
 };
 
-class TomlError: public FileError {
+class toml_error: public file_error {
 public:
-	struct Position {
-		Position(std::size_t l = 0, std::size_t c = 0) {
+	struct position {
+		position(std::size_t l = 0, std::size_t c = 0) {
 			line = l, column = c;
 		}
 		std::size_t line;
@@ -160,119 +160,119 @@ public:
 	};
 
 public:
-	TomlError(
+	toml_error(
 		const std::filesystem::path& path,
-		Position begin, Position end,
+		position begin, position end,
 		const std::string& description,
-		code::Type code = code::TomlError,
-		const std::string& what = code::text.at(code::TomlError)
-	): FileError(path, description, code, what), 
-		e_begin(begin), 
-		e_end(end) {};
-	const Position& begin() { return e_begin; }
-	const Position& end() { return e_end; }
+		code::type code = code::toml_error,
+		const std::string& what = code::text.at(code::toml_error)
+	): file_error(path, description, code, what), 
+		m_begin(begin), 
+		m_end(end) {};
+	const position& begin() { return m_begin; }
+	const position& end() { return m_end; }
 
 private:
-	Position e_begin, e_end;
+	position m_begin, m_end;
 };
 
-class ConfigError: public FileError {
+class config_error: public file_error {
 public:
-	ConfigError(
+	config_error(
 		const std::filesystem::path& path,
-		const std::string& description = code::text.at(code::ConfigError),
-		code::Type code = code::ConfigError,
-		const std::string& what = code::text.at(code::ConfigError)
-	): FileError(path, description, code, what) {};
+		const std::string& description = code::text.at(code::config_error),
+		code::type code = code::config_error,
+		const std::string& what = code::text.at(code::config_error)
+	): file_error(path, description, code, what) {};
 };
 
-class ConfigFieldError: public ConfigError {
+class config_field_error: public config_error {
 public:
-	ConfigFieldError(
+	config_field_error(
 		const std::filesystem::path& path,
 		const std::string& field,
-		const std::string& description = code::text.at(code::ConfigFieldError),
-		code::Type code = code::ConfigFieldError,
-		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigError(path, description, code, what), e_field(field) {};
-	const std::string& field() { return e_field; };
+		const std::string& description = code::text.at(code::config_field_error),
+		code::type code = code::config_field_error,
+		const std::string& what = code::text.at(code::config_field_error)
+	): config_error(path, description, code, what), m_field(field) {};
+	const std::string& field() { return m_field; };
 private:
-	std::string e_field;
+	std::string m_field;
 };
 
-class ConfigWrongFieldType: public ConfigFieldError {
+class config_wrong_field_type: public config_field_error {
 public:
-	ConfigWrongFieldType(
+	config_wrong_field_type(
 		const std::filesystem::path& path,
 		const std::string& field,
 		const std::string& type,
 		const std::string& expectedType,
-		const std::string& description = code::text.at(code::ConfigWrongFieldType),
-		code::Type code = code::ConfigFieldError,
-		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, field, description, code, what), 
-		e_type(type), e_expectedType(expectedType) {};
-	const std::string& type() { return e_type; }
-	const std::string& expectedType() { return e_expectedType; }
+		const std::string& description = code::text.at(code::config_wrong_field_type),
+		code::type code = code::config_field_error,
+		const std::string& what = code::text.at(code::config_field_error)
+	): config_field_error(path, field, description, code, what), 
+		m_type(type), m_expectedType(expectedType) {};
+	const std::string& type() { return m_type; }
+	const std::string& expectedType() { return m_expectedType; }
 private:
-	std::string e_expectedType;
-	std::string e_type;
+	std::string m_expectedType;
+	std::string m_type;
 };
 
-class ConfigUnexpectedFieldValue: public ConfigFieldError {
+class config_unexpected_field_value: public config_field_error {
 public:
 	template<class T>
-	ConfigUnexpectedFieldValue(
+	config_unexpected_field_value(
 		const std::filesystem::path& path,
 		const std::string& field,
 		const std::string& value,
 		const T& expected,
-		const std::string& description = code::text.at(code::ConfigUnexpectedFieldValue),
-		code::Type code = code::ConfigFieldError,
-		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, field, description, code, what), 
-		e_value(value) {
+		const std::string& description = code::text.at(code::config_unexpected_field_value),
+		code::type code = code::config_field_error,
+		const std::string& what = code::text.at(code::config_field_error)
+	): config_field_error(path, field, description, code, what), 
+		m_value(value) {
 		for (const auto& [k, v]: expected) {
-			e_expected += k + ", ";
+			m_expected += k + ", ";
 		}
-		e_expected.erase(e_expected.size()-2, 2);
+		m_expected.erase(m_expected.size()-2, 2);
 	};
-	ConfigUnexpectedFieldValue(
+	config_unexpected_field_value(
 		const std::filesystem::path& path,
 		const std::string& field,
 		const std::string& value,
 		const std::string& expected,
-		const std::string& description = code::text.at(code::ConfigUnexpectedFieldValue),
-		code::Type code = code::ConfigFieldError,
-		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, field, description, code, what), 
-		e_value(value), e_expected(expected) {};
-	const std::string& value() { return e_value; }
-	const std::string& expected() { return e_expected; }
+		const std::string& description = code::text.at(code::config_unexpected_field_value),
+		code::type code = code::config_field_error,
+		const std::string& what = code::text.at(code::config_field_error)
+	): config_field_error(path, field, description, code, what), 
+		m_value(value), m_expected(expected) {};
+	const std::string& value() { return m_value; }
+	const std::string& expected() { return m_expected; }
 private:
-	std::string e_value;
-	std::string e_expected;
+	std::string m_value;
+	std::string m_expected;
 };
 
-class ConfigExclusiveFieldValues: public ConfigFieldError {
+class config_exclusive_field_values: public config_field_error {
 public:
-	ConfigExclusiveFieldValues(
+	config_exclusive_field_values(
 		const std::filesystem::path& path,
 		const std::string& field1,
 		const std::string& value1,
 		const std::string& field2,
 		const std::string& value2,
-		const std::string& description = code::text.at(code::ConfigExclusiveFieldValues),
-		code::Type code = code::ConfigFieldError,
-		const std::string& what = code::text.at(code::ConfigFieldError)
-	): ConfigFieldError(path, description, field1, code, what), 
-		e_value1(value1) {};
-	const std::string& value1() { return e_value1; }
-	const std::string& value2() { return e_value2; }
+		const std::string& description = code::text.at(code::config_exclusive_field_values),
+		code::type code = code::config_field_error,
+		const std::string& what = code::text.at(code::config_field_error)
+	): config_field_error(path, description, field1, code, what), 
+		m_value1(value1) {};
+	const std::string& value1() { return m_value1; }
+	const std::string& value2() { return m_value2; }
 	const std::string& field1() { return field(); }
-	const std::string& field2() { return e_field2; }
+	const std::string& field2() { return m_field2; }
 private:
-	std::string e_value1, e_value2, e_field2;
+	std::string m_value1, m_value2, m_field2;
 };
 
 }

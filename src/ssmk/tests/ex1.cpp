@@ -7,16 +7,16 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/projects/ex1";
 	try {
 		s();
-	} catch (sm::ex::PngError& ex) {
+	} catch (sm::ex::png_error& ex) {
 		std::cout << ex.path() << ": " << ex.what() << ": " << ex.description();
-		return sm::ex::code::Bad;
-	} catch (sm::ex::Error& ex) {
+		return sm::ex::code::bad;
+	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description();
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	} catch (std::exception& ex) {
 		std::cout << ex.what();
-		return sm::ex::code::Bad;
+		return sm::ex::code::bad;
 	}
 
-	return sm::ex::code::Good;
+	return sm::ex::code::good;
 }

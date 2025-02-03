@@ -19,7 +19,7 @@ template<typename T> class Box2D;
 namespace sm {
 
 struct context {
-	struct Config {
+	struct config {
 		std::filesystem::path directory;
 		std::filesystem::path file;
 	} conf;
@@ -32,37 +32,37 @@ struct context {
 		std::filesystem::path file;
 		struct packing {
 			enum class algorithm {
-				None,
-				FirstFit,
-				NextFit,
-				TreeFit,
-			} alg = algorithm::TreeFit;
-			const static std::unordered_map<std::string, algorithm> algorithmText;
-			enum class Ordering {
-				None,
-				Decreasing,
-				Increasing
-			} order = Ordering::Decreasing;
-			const static std::unordered_map<std::string, Ordering> orderText;
-			enum class SortingMetric {
-				None,
-				Width,
-				Height,
-				MaxSide,
-				MinSide,
-				Perimeter,
-				Area,
-			} metric = SortingMetric::MinSide;
-			const static std::unordered_map<std::string, SortingMetric> metricText;
+				none,
+				first_fit,
+				next_fit,
+				tree_fit,
+			} alg = algorithm::tree_fit;
+			const static std::unordered_map<std::string, algorithm> algorithm_text;
+			enum class ordering {
+				none,
+				decreasing,
+				increasing
+			} order = ordering::decreasing;
+			const static std::unordered_map<std::string, ordering> order_text;
+			enum class sorting_metric {
+				none,
+				width,
+				height,
+				max_side,
+				min_side,
+				perimeter,
+				area,
+			} metric = sorting_metric::min_side;
+			const static std::unordered_map<std::string, sorting_metric> metric_text;
 			std::size_t k = 1;
 		} pack;
 		struct png_info {
 			bool opaque = false;
-			enum class Interlacing {
-				None, 
-				Adam7,
-			} interlacing = Interlacing::None;
-			const static std::unordered_map<std::string, Interlacing> interlacingText;
+			enum class interlacing {
+				none, 
+				adam7,
+			} inter = interlacing::none;
+			const static std::unordered_map<std::string, interlacing> interlacing_text;
 			std::array<double, 3> background = {0, 0, 0};
 			int compression = -1;
 		} png;
@@ -71,10 +71,10 @@ struct context {
 	struct intermediate {
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 
-		std::size_t colorPresent   = 0;
-		std::size_t alphaPresent   = 0;
-		std::size_t palettePresent = 0;
-		std::size_t tRNSPresent    = 0;
+		std::size_t color_present   = 0;
+		std::size_t alpha_present   = 0;
+		std::size_t palette_present = 0;
+		std::size_t tRNS_present    = 0;
 
 		std::size_t width, height; ///< Output dimentions
 		void* png = nullptr;  ///< Output png data structure
@@ -84,7 +84,7 @@ struct context {
 		int color = 0; ///< Output color mode
 		int depth = 0; ///< Output color depth
 		void* chunk = nullptr; ///< Ssmk specific png chunk
-		std::uint32_t chunkSize = 0;
+		std::uint32_t chunk_size = 0;
 		~intermediate();
 	} im;
 
@@ -106,7 +106,7 @@ struct context {
 		SE(out.pack.order);
 		SE(out.pack.metric);
 		S(out.pack.k);
-		SE(out.png.interlacing);
+		SE(out.png.inter);
 		S(out.png.opaque);
 		SV(out.png.background);
 
@@ -114,10 +114,10 @@ struct context {
 
 		os << "im.sprites" ": \n";
 		for (const auto& r : c.im.sprites) {
-			os << "  " << *static_cast<Sprite*>(r) << '\n';
+			os << "  " << *static_cast<sprite*>(r) << '\n';
 		}
 		S(im.depth);
-		S(im.colorPresent);
+		S(im.color_present);
 		S(im.width);
 		S(im.height);
 

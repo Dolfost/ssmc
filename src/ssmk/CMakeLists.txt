@@ -2,7 +2,6 @@ include(FetchContent)
 FetchContent_Declare(
     calgo QUIET
     GIT_REPOSITORY https://github.com/Dolfost/calgo.git
-
     GIT_TAG v3.3.0.0
 )
 FetchContent_MakeAvailable(calgo)
@@ -23,18 +22,18 @@ project(ssmk
 )
 
 add_library(sm_ssmk 
-	src/readConfig.cpp
-	src/findFiles.cpp
-	src/readSpriteHeaders.cpp
-	src/packSprites.cpp
-	src/makeOutputPng.cpp
-	src/copySprites.cpp
-	src/buildPngChunk.cpp
-	src/writePng.cpp
+	src/read_config.cpp
+	src/find_files.cpp
+	src/read_sprite_headers.cpp
+	src/pack_sprites.cpp
+	src/make_output_png.cpp
+	src/copy_sprites.cpp
+	src/build_png_chunk.cpp
+	src/write_png.cpp
 	# miscellaneous
 	src/sprite.cpp
 	src/context.cpp
-	src/fillContext.cpp
+	src/fill_context.cpp
 )
 add_library(sm::ssmk ALIAS sm_ssmk)
 

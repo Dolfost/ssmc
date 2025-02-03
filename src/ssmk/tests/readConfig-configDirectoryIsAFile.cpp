@@ -7,10 +7,10 @@ int main(int argc, char** argv) {
 	s.context.conf.directory = TESTPATH "/" TESTFILE;
 	try {
 		s.read_config();
-	} catch (sm::ex::FileError& ex) {
+	} catch (sm::ex::file_error& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
-		return sm::ex::code::Good;
+		return sm::ex::code::good;
 	}
 
-	return sm::ex::code::Bad;
+	return sm::ex::code::bad;
 }
