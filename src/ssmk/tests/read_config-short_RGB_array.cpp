@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
 	sm::ssmk s;
 	try {
-		s.read_config(TESTPATH "/projects/shortRGBarray");
+		s.read_config(TESTPATH "/projects/short_RGB_array");
 	} catch (sm::ex::config_wrong_field_type& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
 		return sm::ex::code::good;

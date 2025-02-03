@@ -122,12 +122,42 @@ public:
 		write_png();
 	}
 
+	void read_sheet_header();
+	CALLBACK(
+		sheet_header_read
+	);
+
+	void extract_png_chunk();
+	CALLBACK(
+		chunk_entry_extracted,
+		size_type i
+	);
+	CALLBACK(
+		chunk_extracted,
+	);
+	void read_sheet_png_data();
+	CALLBACK(
+		png_data_read,
+		size_type row,
+		size_type pass,
+		size_type passes
+	)
+
 	/*
 	 * will use m_context.conf.file or find config file in
 	 * m_context.conf.directory and extract from it the output.file field and 
 	 * read the png and build the std::map<std::string, sprite>
 	*/
-	void read_sheet() {
+	template<typename P> typename 
+	std::enable_if<std::is_assignable<std::filesystem::path, P>::value>::type read_sheet(P&& path) {
+		m_context = sm::context();
+		if (std::filesystem::is_regular_file(path))
+			m_context.out.file = std::filesystem::absolute(path);
+		else 
+			read_config(std::forward<P>(path)); // will throw at any file error
+		read_sheet_header();
+		extract_png_chunk();
+		read_sheet_png_data();
 	}
 
 	/*

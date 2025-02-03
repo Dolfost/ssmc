@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
 	sm::ssmk s;
 	try {
-		s.read_config(TESTPATH "/projects/nosprites" );
+		s.read_config(TESTPATH "/projects/no_sprites" );
 		s.find_files();
 	} catch (sm::ex::error& ex) {
 		std::cout << ex.what() << ": " << ex.description() << std::endl;

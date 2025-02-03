@@ -5,7 +5,7 @@
 int main(int argc, char** argv) {
 	sm::ssmk s;
 	try {
-		s.read_config(TESTPATH "/projects/negativeKPacking");
+		s.read_config(TESTPATH "/projects/negative_k_packing");
 	} catch (sm::ex::config_unexpected_field_value& ex) {
 		std::cout << ex.path() <<  ": " << ex.what() 
 			<< ": " << ex.description() << ": " << ex.field() 
