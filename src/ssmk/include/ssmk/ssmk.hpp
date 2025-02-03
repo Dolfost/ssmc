@@ -24,9 +24,9 @@ namespace sm {
 
 class Ssmk {
 public:
-	Ssmk(const sm::Context& context = {}): s_context(context) {};
+	Ssmk(const sm::Context& context = {}): m_context(context) {};
 
-	sm::Context& context = s_context;
+	sm::Context& context = m_context;
 
 public:
 	struct CallbackInfo {
@@ -119,9 +119,10 @@ public:
 	constexpr static const std::array configFilenames = {
 		"ssmk.toml", "sprite.toml", "spritesheet.toml"
 	};
+	constexpr static const char* chunk_name = "ssMK";
 
 private:
-	sm::Context s_context;
+	sm::Context m_context;
 };
 
 #undef CALLBACK

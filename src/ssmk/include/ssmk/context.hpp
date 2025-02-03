@@ -5,10 +5,11 @@
 
 #include <vector>
 #include <array>
-#include <ostream>
+#include <iosfwd>
 #include <filesystem>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 #include <type_traits>
 
 namespace ca::optim {
@@ -75,15 +76,15 @@ struct Context {
 		std::size_t palettePresent = 0;
 		std::size_t tRNSPresent    = 0;
 
-		std::size_t width, height; // output dimentions
-		void* png = nullptr;  // output png data structure
-		void* info = nullptr; // output png info structure
-		void* background = nullptr; // output png background structure
-		void* rows = nullptr; // output buffer
-		void* chunk = nullptr; // ssmk specific png chunk
-		int chunkSize = 0;
-		int color = 0; // output color mode
-		int depth = 0; // output color depth
+		std::size_t width, height; ///< Output dimentions
+		void* png = nullptr;  ///< Output png data structure
+		void* info = nullptr; ///< Output png info structure
+		void* background = nullptr; ///< Output png background structure
+		void* rows = nullptr; ///< Output buffer
+		int color = 0; ///< Output color mode
+		int depth = 0; ///< Output color depth
+		void* chunk = nullptr; ///< Ssmk specific png chunk
+		std::uint32_t chunkSize = 0;
 		~Intermediate();
 	} im;
 

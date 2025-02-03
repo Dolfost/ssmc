@@ -4,7 +4,7 @@
 #include <calgo/optim/packing2D.hpp>
 
 #include <filesystem>
-#include <ostream>
+#include <iosfwd>
 
 typedef struct png_struct_def png_struct;
 typedef png_struct* png_structp;
