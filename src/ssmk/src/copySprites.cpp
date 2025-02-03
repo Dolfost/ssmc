@@ -10,7 +10,7 @@
 
 namespace sm {
 
-void Ssmk::copySprites() {
+void ssmk::copy_sprites() {
 	png_structp& opng = (png_structp&)context.im.png;
 	png_infop& oinfo = (png_infop&)context.im.info;
 

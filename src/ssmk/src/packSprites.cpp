@@ -9,7 +9,7 @@ using Algorithm = Context::Output::Packing::Algorithm;
 using Order = Context::Output::Packing::Order;
 using Metric = Context::Output::Packing::Metric;
 
-void Ssmk::packSprites() {
+void ssmk::pack_sprites() {
 	std::function<bool(const std::size_t&, const std::size_t&)> order;
 	switch (context.output.packing.order) {
 		case Order::Decreasing:

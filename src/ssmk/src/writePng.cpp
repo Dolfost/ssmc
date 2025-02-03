@@ -6,7 +6,7 @@
 
 namespace sm {
 
-void Ssmk::writePng() {
+void ssmk::write_png() {
 	std::FILE* ofile = 
 		std::fopen(context.output.file.c_str(), "wb");
 	if (not ofile)

@@ -12,7 +12,7 @@ namespace sm {
 	if (m_file_found_callback)  \
 		m_file_found_callback(*this); \
 
-void Ssmk::findFiles() {
+void ssmk::find_files() {
 	for (auto ptr: context.im.sprites) {
 		delete ptr;
 	}

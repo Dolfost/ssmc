@@ -3,11 +3,11 @@
 #include <ssmk/exceptions.hpp>
 
 int main(int argc, char** argv) {
-	sm::Ssmk s;
+	sm::ssmk s;
 	s.context.config.directory = TESTPATH "/projects/nosprites" ;
 	try {
-		s.readConfig();
-		s.findFiles();
+		s.read_config();
+		s.find_files();
 	} catch (sm::ex::Error& ex) {
 		std::cout << ex.what() << ": " << ex.description() << std::endl;
 		return ex.code() == sm::ex::code::NoSpritesFound ? sm::ex::code::Good : sm::ex::code::Bad;

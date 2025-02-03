@@ -23,7 +23,7 @@ throw sm::ex::E( \
 	{ OBJ->source().begin.line, OBJ->source().begin.column } \
 );
 
-void Ssmk::fillContext(sm::Context& context) {
+void ssmk::fill_context(sm::Context& context) {
 	context.config.directory = 
 		std::filesystem::absolute(context.config.directory);
 	if (not std::filesystem::is_directory(context.config.directory))

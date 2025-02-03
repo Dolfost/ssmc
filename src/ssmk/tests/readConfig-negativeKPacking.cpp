@@ -3,10 +3,10 @@
 #include <ssmk/exceptions.hpp>
 
 int main(int argc, char** argv) {
-	sm::Ssmk s;
+	sm::ssmk s;
 	s.context.config.directory = TESTPATH "/projects/negativeKPacking";
 	try {
-		s.readConfig();
+		s.read_config();
 	} catch (sm::ex::ConfigUnexpectedFieldValue& ex) {
 		std::cout << ex.path() <<  ": " << ex.what() 
 			<< ": " << ex.description() << ": " << ex.field() 

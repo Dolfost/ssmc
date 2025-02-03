@@ -3,7 +3,7 @@
 #include <ssmk/exceptions.hpp>
 
 int main(int argc, char** argv) {
-	sm::Ssmk s;
+	sm::ssmk s;
 	s.context.config.directory = TESTPATH "/projects/generated";
 	try {
 		s();

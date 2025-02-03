@@ -41,7 +41,7 @@ private:
 	std::string a_version;
 
 private:
-	sm::Ssmk a_ssmk;
+	sm::ssmk a_ssmk;
 
 private:
 	CLI::App a_app;

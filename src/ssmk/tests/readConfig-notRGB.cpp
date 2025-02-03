@@ -3,10 +3,10 @@
 #include <ssmk/exceptions.hpp>
 
 int main(int argc, char** argv) {
-	sm::Ssmk s;
+	sm::ssmk s;
 	s.context.config.directory = TESTPATH "/projects/notRGB";
 	try {
-		s.readConfig();
+		s.read_config();
 	} catch (sm::ex::ConfigUnexpectedFieldValue& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
 		return ex.code() == sm::ex::code::ConfigNotRGB ? sm::ex::code::Good : sm::ex::code::Bad;

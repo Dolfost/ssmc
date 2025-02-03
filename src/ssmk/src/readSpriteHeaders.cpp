@@ -11,7 +11,7 @@
 
 namespace sm {
 
-void Ssmk::readSpriteHeaders() {
+void ssmk::read_sprite_headers() {
 	static const std::size_t sigLen = 8;
 	unsigned char signature[sigLen];
 	std::size_t spriteCount = context.im.sprites.size();

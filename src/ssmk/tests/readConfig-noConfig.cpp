@@ -3,10 +3,10 @@
 #include <ssmk/exceptions.hpp>
 
 int main(int argc, char** argv) {
-	sm::Ssmk s;
+	sm::ssmk s;
 	s.context.config.directory = TESTPATH;
 	try {
-		s.readConfig();
+		s.read_config();
 	} catch (sm::ex::FileError& ex) {
 		std::cout << ex.what() << ": " << ex.description() << ": "  << ex.path() << std::endl;
 		return sm::ex::code::Good;

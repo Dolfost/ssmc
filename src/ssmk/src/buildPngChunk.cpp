@@ -15,7 +15,7 @@
 
 namespace sm {
 
-void Ssmk::buildPngChunk() {
+void ssmk::build_png_chunk() {
 	m_context.im.chunkSize = sizeof(std::uint32_t);
 	std::vector<std::string> paths;
 	paths.reserve(m_context.im.sprites.size());

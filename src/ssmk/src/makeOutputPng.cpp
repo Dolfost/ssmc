@@ -6,7 +6,7 @@
 
 namespace sm {
 
-void Ssmk::makeOutputPng() {
+void ssmk::make_output_png() {
 	png_structp& png = (png_structp&)context.im.png;
 	png_infop& info = (png_infop&)context.im.info;
 
