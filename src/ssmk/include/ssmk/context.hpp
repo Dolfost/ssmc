@@ -98,7 +98,6 @@ struct context {
 	} im;
 
 	friend std::ostream& operator<<(std::ostream& os, const context& c);
-
 };
 
 }

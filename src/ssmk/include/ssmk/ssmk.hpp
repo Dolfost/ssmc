@@ -56,7 +56,7 @@ public:
 	void read_sprite_headers();
 	CALLBACK(
 		image_header_read,
-		std::size_t image
+		size_type image
 	)
 	CALLBACK(
 		image_headers_read,
@@ -65,7 +65,7 @@ public:
 	void pack_sprites();
 	CALLBACK(
 		image_packed,
-		std::size_t imageNo
+		size_type imageNo
 	)
 	CALLBACK(
 		images_packed
@@ -76,7 +76,7 @@ public:
 	void build_png_chunk();
 	CALLBACK(
 		png_chunk_entry_written,
-		std::size_t sprite
+		size_type sprite
 	)
 	CALLBACK(
 		png_chunk_built
@@ -85,14 +85,14 @@ public:
 	void copy_sprites();
 	CALLBACK(
 		sprite_row_copied,
-		std::size_t sprite,
-		std::size_t row,
-		std::size_t pass,
-		std::size_t passes
+		size_type sprite,
+		size_type row,
+		size_type pass,
+		size_type passes
 	)
 	CALLBACK(
 		sprite_copied,
-		std::size_t image
+		size_type image
 	)
 	CALLBACK(
 		sprites_copied
@@ -101,9 +101,9 @@ public:
 	void write_png();
 	CALLBACK(
 		image_row_written,
-		std::size_t row,
-		std::size_t pass,
-		std::size_t passes
+		size_type row,
+		size_type pass,
+		size_type passes
 	)
 	CALLBACK(
 		png_written
@@ -135,12 +135,16 @@ public:
 	CALLBACK(
 		chunk_extracted,
 	);
+
 	void read_sheet_png_data();
 	CALLBACK(
-		png_data_read,
+		image_row_read,
 		size_type row,
 		size_type pass,
 		size_type passes
+	)
+	CALLBACK(
+		image_read
 	)
 
 	/*
