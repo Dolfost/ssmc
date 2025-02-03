@@ -10,14 +10,14 @@ namespace sm {
 	sprite->setPath(P);  \
 	context.im.sprites.push_back(sprite);  \
 	if (m_file_found_callback)  \
-		m_file_found_callback(*this); \
+		m_file_found_callback(m_context); \
 
 void ssmk::find_files() {
 	for (auto ptr: context.im.sprites) {
 		delete ptr;
 	}
 	context.im.sprites.clear();
-	for (const auto& in: context.input.files) {
+	for (const auto& in: context.in.files) {
 		if (std::filesystem::is_directory(in)) {
 			for (const auto& entry: std::filesystem::recursive_directory_iterator(in)) {
 				if (entry.is_regular_file() and entry.path().extension() == ".png") {
@@ -31,7 +31,7 @@ void ssmk::find_files() {
 	if (context.im.sprites.empty())
 		SM_EX_THROW(Error, NoSpritesFound)
 	if (m_files_found_callback)
-		m_files_found_callback(*this);
+		m_files_found_callback(m_context);
 }
 
 #undef SSMK_ADD_SPRITE

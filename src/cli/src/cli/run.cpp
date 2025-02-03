@@ -12,7 +12,7 @@ int Application::run(int argc, const char** argv) {
 	if (parseResult != EXIT_SUCCESS)
 		return parseResult;
 
-	a_ssmk.context.config.directory = 
+	a_ssmk.context.conf.directory = 
 		std::filesystem::absolute(context.sourceDirectory);
 
 	std::cout << "CLI context:\n" << context << std::endl;

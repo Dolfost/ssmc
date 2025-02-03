@@ -83,7 +83,7 @@ void ssmk::copy_sprites() {
 					);
 					// unfortunatetly we cannot use png_set_read_status_fn...
 					m_sprite_row_copied_callback(
-						*this, i, r, p, passes
+						m_context, i, r, p, passes
 					);
 				}
 		} else {
@@ -97,7 +97,7 @@ void ssmk::copy_sprites() {
 		}
 
 		if (m_sprite_copied_callback) 
-			m_sprite_copied_callback(*this, i);
+			m_sprite_copied_callback(m_context, i);
 
 		png_read_end(png, nullptr);
 		png_destroy_read_struct(&png, &info, nullptr);
@@ -107,7 +107,7 @@ void ssmk::copy_sprites() {
 	}
 
 	if (m_sprites_copied_callback) 
-		m_sprites_copied_callback(*this);
+		m_sprites_copied_callback(m_context);
 }
 
 }

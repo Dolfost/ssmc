@@ -1,41 +1,40 @@
 #include <ssmk/context.hpp>
 
 #include <png.h>
-#include <ostream>
 
 namespace sm {
 
-const std::unordered_map<std::string, Context::Output::Packing::Algorithm> 
-	Context::Output::Packing::algorithmText {
-	{ "firstFit", Context::Output::Packing::Algorithm::FirstFit },
-	{ "nextFit",  Context::Output::Packing::Algorithm::NextFit },
-	{ "treeFit",  Context::Output::Packing::Algorithm::TreeFit },
+const std::unordered_map<std::string, context::output::packing::algorithm> 
+	context::output::packing::algorithmText {
+	{ "firstFit", context::output::packing::algorithm::FirstFit },
+	{ "nextFit",  context::output::packing::algorithm::NextFit },
+	{ "treeFit",  context::output::packing::algorithm::TreeFit },
 };
 
-const std::unordered_map<std::string, Context::Output::Packing::Order> 
-	Context::Output::Packing::orderText {
-	{ "none",       Context::Output::Packing::Order::None },
-	{ "decreasing", Context::Output::Packing::Order::Decreasing },
-	{ "increasing", Context::Output::Packing::Order::Increasing },
+const std::unordered_map<std::string, context::output::packing::Ordering> 
+	context::output::packing::orderText {
+	{ "none",       context::output::packing::Ordering::None },
+	{ "decreasing", context::output::packing::Ordering::Decreasing },
+	{ "increasing", context::output::packing::Ordering::Increasing },
 };
 
-const std::unordered_map<std::string, Context::Output::Packing::Metric> 
-	Context::Output::Packing::metricText {
-	{ "width",     Context::Output::Packing::Metric::Width },
-	{ "height",    Context::Output::Packing::Metric::Height },
-	{ "maxSide",   Context::Output::Packing::Metric::MaxSide },
-	{ "minSide",   Context::Output::Packing::Metric::MinSide },
-	{ "perimeter", Context::Output::Packing::Metric::Perimeter },
-	{ "area",      Context::Output::Packing::Metric::Area },
+const std::unordered_map<std::string, context::output::packing::SortingMetric> 
+	context::output::packing::metricText {
+	{ "width",     context::output::packing::SortingMetric::Width },
+	{ "height",    context::output::packing::SortingMetric::Height },
+	{ "maxSide",   context::output::packing::SortingMetric::MaxSide },
+	{ "minSide",   context::output::packing::SortingMetric::MinSide },
+	{ "perimeter", context::output::packing::SortingMetric::Perimeter },
+	{ "area",      context::output::packing::SortingMetric::Area },
 };
 
-const std::unordered_map<std::string, Context::Output::Png::Interlacing> 
-	Context::Output::Png::interlacingText {
-	{ "none",     Context::Output::Png::Interlacing::None },
-	{ "adam7",     Context::Output::Png::Interlacing::Adam7 },
+const std::unordered_map<std::string, context::output::png_info::Interlacing> 
+	context::output::png_info::interlacingText {
+	{ "none",     context::output::png_info::Interlacing::None },
+	{ "adam7",     context::output::png_info::Interlacing::Adam7 },
 };
 
-Context::Intermediate::~Intermediate() {
+context::intermediate::~intermediate() {
 	for (auto ptr: sprites)
 		delete ptr;
 	sprites.clear();

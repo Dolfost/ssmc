@@ -18,33 +18,33 @@ template<typename T> class Box2D;
 
 namespace sm {
 
-struct Context {
+struct context {
 	struct Config {
 		std::filesystem::path directory;
 		std::filesystem::path file;
-	} config;
+	} conf;
 
-	struct Input {
+	struct input {
 		std::vector<std::filesystem::path> files;
-	} input;
+	} in;
 
-	struct Output {
+	struct output {
 		std::filesystem::path file;
-		struct Packing {
-			enum class Algorithm {
+		struct packing {
+			enum class algorithm {
 				None,
 				FirstFit,
 				NextFit,
 				TreeFit,
-			} algorithm = Algorithm::TreeFit;
-			const static std::unordered_map<std::string, Algorithm> algorithmText;
-			enum class Order {
+			} alg = algorithm::TreeFit;
+			const static std::unordered_map<std::string, algorithm> algorithmText;
+			enum class Ordering {
 				None,
 				Decreasing,
 				Increasing
-			} order = Order::Decreasing;
-			const static std::unordered_map<std::string, Order> orderText;
-			enum class Metric {
+			} order = Ordering::Decreasing;
+			const static std::unordered_map<std::string, Ordering> orderText;
+			enum class SortingMetric {
 				None,
 				Width,
 				Height,
@@ -52,11 +52,11 @@ struct Context {
 				MinSide,
 				Perimeter,
 				Area,
-			} metric = Metric::MinSide;
-			const static std::unordered_map<std::string, Metric> metricText;
+			} metric = SortingMetric::MinSide;
+			const static std::unordered_map<std::string, SortingMetric> metricText;
 			std::size_t k = 1;
-		} packing;
-		struct Png {
+		} pack;
+		struct png_info {
 			bool opaque = false;
 			enum class Interlacing {
 				None, 
@@ -66,9 +66,9 @@ struct Context {
 			std::array<double, 3> background = {0, 0, 0};
 			int compression = -1;
 		} png;
-	} output;
+	} out;
 
-	struct Intermediate {
+	struct intermediate {
 		std::vector<ca::optim::Box2D<std::size_t>*> sprites;
 
 		std::size_t colorPresent   = 0;
@@ -85,10 +85,10 @@ struct Context {
 		int depth = 0; ///< Output color depth
 		void* chunk = nullptr; ///< Ssmk specific png chunk
 		std::uint32_t chunkSize = 0;
-		~Intermediate();
+		~intermediate();
 	} im;
 
-	friend std::ostream& operator<<(std::ostream& os, const Context& c) {
+	friend std::ostream& operator<<(std::ostream& os, const context& c) {
 		#define S(PROP) os << #PROP ": " << c.PROP << std::endl;
 		#define SE(PROP) os << #PROP ": " << static_cast<std::underlying_type<decltype(c.PROP)>::type>(c.PROP) << std::endl;
 		#define SV(PROP) \
@@ -97,20 +97,20 @@ struct Context {
 			os << "  " << r << '\n'; \
 		}
 
-		SV(input.files);
+		SV(in.files);
 
-		S(config.directory);
-		S(output.file);
+		S(conf.directory);
+		S(out.file);
 
-		SE(output.packing.algorithm);
-		SE(output.packing.order);
-		SE(output.packing.metric);
-		S(output.packing.k);
-		SE(output.png.interlacing);
-		S(output.png.opaque);
-		SV(output.png.background);
+		SE(out.pack.alg);
+		SE(out.pack.order);
+		SE(out.pack.metric);
+		S(out.pack.k);
+		SE(out.png.interlacing);
+		S(out.png.opaque);
+		SV(out.png.background);
 
-		S(config.file);
+		S(conf.file);
 
 		os << "im.sprites" ": \n";
 		for (const auto& r : c.im.sprites) {

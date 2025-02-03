@@ -23,7 +23,7 @@ void ssmk::build_png_chunk() {
 		paths.push_back(
 			std::filesystem::path(
 				static_cast<Sprite*>(p)->path().lexically_relative(
-					m_context.config.directory
+					m_context.conf.directory
 				)
 			).replace_extension("").generic_string()
 		);
@@ -71,7 +71,7 @@ void ssmk::build_png_chunk() {
 		at += size;
 		
 		if (call)
-			m_png_chunk_entry_written_callback(*this, i);
+			m_png_chunk_entry_written_callback(m_context, i);
 	}
 
 	png_unknown_chunkp chunk = (png_unknown_chunkp)std::malloc(sizeof(png_unknown_chunk));
@@ -91,7 +91,7 @@ void ssmk::build_png_chunk() {
 	);
 
 	if (m_png_chunk_built_callback) 
-		m_png_chunk_built_callback(*this);
+		m_png_chunk_built_callback(m_context);
 }
 
 }

@@ -8,15 +8,15 @@
 
 #define CALLBACK(NAME, ...) \
 	private: \
-		std::function<void(const ssmk& __VA_OPT__(,) __VA_ARGS__)> m_##NAME##_callback; \
+		std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)> m_##NAME##_callback; \
 	public: \
-		void set_##NAME##_callback(const std::function<void(const ssmk& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
+		void set_##NAME##_callback(const std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& callback) { \
 			m_##NAME##_callback = callback; \
 		} \
-		const std::function<void(const ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() const { \
+		const std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() const { \
 			return m_##NAME##_callback; \
 		} \
-		std::function<void(const ssmk& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
+		std::function<void(const sm::context& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
 			return m_##NAME##_callback; \
 		}
 
@@ -24,9 +24,9 @@ namespace sm {
 
 class ssmk {
 public:
-	ssmk(const sm::Context& context = {}): m_context(context) {};
+	ssmk(const sm::context& context = {}): m_context(context) {};
 
-	sm::Context& context = m_context;
+	sm::context& context = m_context;
 
 public:
 	struct CallbackInfo {
@@ -113,7 +113,7 @@ public:
 		write_png();
 	}
 
-	static void fill_context(sm::Context& context);
+	static void fill_context(sm::context& context);
 
 public:
 	constexpr static const std::array configFilenames = {
@@ -122,7 +122,7 @@ public:
 	constexpr static const char* chunk_name = "ssMK";
 
 private:
-	sm::Context m_context;
+	sm::context m_context;
 };
 
 #undef CALLBACK

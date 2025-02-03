@@ -8,9 +8,9 @@ namespace sm {
 
 void ssmk::write_png() {
 	std::FILE* ofile = 
-		std::fopen(context.output.file.c_str(), "wb");
+		std::fopen(context.out.file.c_str(), "wb");
 	if (not ofile)
-		SM_EX_THROW(PngError, PngFailedToOpenForWritting, context.output.file);
+		SM_EX_THROW(PngError, PngFailedToOpenForWritting, context.out.file);
 
 	png_structp& png = (png_structp&)context.im.png;
 	png_infop& info = (png_infop&)context.im.info;
@@ -31,7 +31,7 @@ void ssmk::write_png() {
 				);
 				// unfortunatetly we cannot use png_set_write_status_fn...
 				m_image_row_written_callback(
-					*this, r, p, passes
+					m_context, r, p, passes
 				);
 			}
 	} else
@@ -50,7 +50,7 @@ void ssmk::write_png() {
 	std::fclose(ofile);
 
 	if (m_png_written_callback) 
-		m_png_written_callback(*this);
+		m_png_written_callback(m_context);
 }
 
 }

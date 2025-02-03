@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.config.directory = TESTPATH "/projects/negativeKPacking";
+	s.context.conf.directory = TESTPATH "/projects/negativeKPacking";
 	try {
 		s.read_config();
 	} catch (sm::ex::ConfigUnexpectedFieldValue& ex) {

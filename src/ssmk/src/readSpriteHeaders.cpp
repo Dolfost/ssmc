@@ -72,11 +72,11 @@ void ssmk::read_sprite_headers() {
 		std::fclose(file);
 
 		if (m_image_header_read_callback)
-			m_image_header_read_callback(*this, i);
+			m_image_header_read_callback(m_context, i);
 	}
 
 	if (m_image_headers_read_callback)
-		m_image_headers_read_callback(*this);
+		m_image_headers_read_callback(m_context);
 }
 
 }

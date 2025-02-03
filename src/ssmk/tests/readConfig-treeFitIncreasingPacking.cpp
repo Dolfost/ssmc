@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.config.directory = TESTPATH "/projects/treeFitIncreasingPacking";
+	s.context.conf.directory = TESTPATH "/projects/treeFitIncreasingPacking";
 	try {
 		s.read_config();
 	} catch (sm::ex::ConfigExclusiveFieldValues& ex) {

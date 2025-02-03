@@ -5,13 +5,13 @@
 
 namespace sm {
 
-using Algorithm = Context::Output::Packing::Algorithm;
-using Order = Context::Output::Packing::Order;
-using Metric = Context::Output::Packing::Metric;
+using Algorithm = context::output::packing::algorithm;
+using Order = context::output::packing::Ordering;
+using Metric = context::output::packing::SortingMetric;
 
 void ssmk::pack_sprites() {
 	std::function<bool(const std::size_t&, const std::size_t&)> order;
-	switch (context.output.packing.order) {
+	switch (context.out.pack.order) {
 		case Order::Decreasing:
 			order = std::greater<const std::size_t&>();
 			break;
@@ -23,7 +23,7 @@ void ssmk::pack_sprites() {
 
 	std::function<std::size_t(const ca::optim::Box2D<std::size_t>* box)> metric;
 	if (order) 
-		switch (context.output.packing.metric) {
+		switch (context.out.pack.metric) {
 			case Metric::Perimeter:
 				metric = [](auto box) { return box->perimeter(); };
 				break;
@@ -47,7 +47,7 @@ void ssmk::pack_sprites() {
 		}
 
 	ca::optim::Packing2D<std::size_t>* packing;
-	switch (context.output.packing.algorithm) {
+	switch (context.out.pack.alg) {
 		case Algorithm::TreeFit: {
 			packing = new ca::optim::TreeFit2D<std::size_t>; 
 			break; }
@@ -56,7 +56,7 @@ void ssmk::pack_sprites() {
 			break; }
 		case Algorithm::NextFit: {
 			auto p = new ca::optim::NextFit2D<std::size_t>; 
-			p->setK(context.output.packing.k);
+			p->setK(context.out.pack.k);
 			packing = p;
 			break; }
 		case Algorithm::None: 
@@ -76,7 +76,7 @@ void ssmk::pack_sprites() {
 			[this](
 				const std::vector<ca::optim::Box2D<std::size_t>*>& boxes, 
 				std::size_t index) {
-				this->m_image_packed_callback(*this, index);
+				this->m_image_packed_callback(m_context, index);
 			}
 		);
 
@@ -87,7 +87,7 @@ void ssmk::pack_sprites() {
 	delete packing;
 
 	if (m_images_packed_callback)
-		m_images_packed_callback(*this);
+		m_images_packed_callback(m_context);
 }
 
 }

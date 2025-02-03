@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.config.directory = TESTPATH "/projects/paletted";
+	s.context.conf.directory = TESTPATH "/projects/paletted";
 	try {
 		s();
 	} catch (sm::ex::PngError& ex) {

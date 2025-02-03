@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) {
 	sm::ssmk s;
-	s.context.config.directory = TESTPATH "/projects/nosprites" ;
+	s.context.conf.directory = TESTPATH "/projects/nosprites" ;
 	try {
 		s.read_config();
 		s.find_files();

@@ -15,15 +15,15 @@ void ssmk::make_output_png() {
 	if (context.im.colorPresent)
 		context.im.color |= PNG_COLOR_MASK_COLOR;
 	if ((context.im.alphaPresent or context.im.tRNSPresent) and not 
-		context.output.png.opaque)
+		context.out.png.opaque)
 		context.im.color |= PNG_COLOR_MASK_ALPHA;
 
 	int interlacing;
-	switch (context.output.png.interlacing) {
-		case Context::Output::Png::Interlacing::None:
+	switch (context.out.png.interlacing) {
+		case context::output::png_info::Interlacing::None:
 			interlacing = PNG_INTERLACE_NONE;
 			break;
-		case Context::Output::Png::Interlacing::Adam7:
+		case context::output::png_info::Interlacing::Adam7:
 			interlacing = PNG_INTERLACE_ADAM7;
 			break;
 	}
@@ -54,19 +54,19 @@ void ssmk::make_output_png() {
 		SM_EX_THROW(
 			PngError, 
 			PngCouldNotAllocateBackgroundColor, 
-			context.output.file
+			context.out.file
 		);
 	png_color_16& bkgd = *(png_color_16p)context.im.background;
 	int max = 1 << context.im.depth; // max pixel component value
 	if (context.im.color & PNG_COLOR_MASK_COLOR) {
-		bkgd.red =   max * context.output.png.background[0];
-		bkgd.green = max * context.output.png.background[1];
-		bkgd.blue =  max *context.output.png.background[2];
+		bkgd.red =   max * context.out.png.background[0];
+		bkgd.green = max * context.out.png.background[1];
+		bkgd.blue =  max *context.out.png.background[2];
 	} else {
 		bkgd.gray = (
-			6968  * max * context.output.png.background[0] + 
-			23434 * max * context.output.png.background[1] + 
-			2366  * max * context.output.png.background[2]
+			6968  * max * context.out.png.background[0] + 
+			23434 * max * context.out.png.background[1] + 
+			2366  * max * context.out.png.background[2]
 		) / 32768;
 	}
 	if (not (context.im.color & PNG_COLOR_MASK_ALPHA))
@@ -76,7 +76,7 @@ void ssmk::make_output_png() {
 		);
 
 	png_set_compression_level(
-		png, context.output.png.compression
+		png, context.out.png.compression
 	);
 
 	// put comments
@@ -99,7 +99,7 @@ void ssmk::make_output_png() {
 	png_bytepp rows = (png_bytepp&)context.im.rows;
 	if (not rows) {
 		png_destroy_write_struct(&png, &info);
-		SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.output.file);
+		SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.out.file);
 	}
 	for (std::size_t i = 0; i < context.im.height; i++) {
 		rows[i] = new png_byte[png_get_rowbytes(png, info)];
@@ -110,7 +110,7 @@ void ssmk::make_output_png() {
 				delete rows[j];
 			delete rows;
 			rows = nullptr;
-			SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.output.file);
+			SM_EX_THROW(PngError, PngCouldNotAllocateOutputRows, context.out.file);
 		}
 	}
 
