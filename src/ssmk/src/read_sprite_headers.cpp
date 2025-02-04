@@ -13,7 +13,7 @@ namespace sm {
 
 void ssmk::read_sprite_headers() {
 	static const std::size_t sigLen = 8;
-	unsigned char signature[sigLen];
+	png_byte signature[sigLen];
 	std::size_t spriteCount = context.im.sprites.size();
 
 	std::FILE* file = nullptr;
@@ -64,7 +64,7 @@ void ssmk::read_sprite_headers() {
 		context.im.palette_present += bool(color & PNG_COLOR_MASK_PALETTE);
 		context.im.alpha_present   += bool(color & PNG_COLOR_MASK_ALPHA);
 		context.im.tRNS_present    += bool(png_get_valid(png, info, PNG_INFO_tRNS));
-		context.im.depth          =  std::max(context.im.depth, depth);
+		context.im.depth           =  std::max(context.im.depth, depth);
 
 		sprt->setSize({width, height});
 		sprt->png().pos = std::ftell(file);

@@ -12,8 +12,6 @@ void ssmk::write_png() {
 	if (not ofile)
 		SM_EX_THROW(png_error, png_failed_to_open_for_writting, context.out.file);
 
-	png_byte b;
-	png_bytepp p;
 	png_init_io(context.im.png, ofile);
 
 	png_write_info(context.im.png, context.im.info);

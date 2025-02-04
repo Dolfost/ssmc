@@ -22,6 +22,7 @@ project(ssmk
 )
 
 add_library(sm_ssmk 
+	# make sheet
 	src/find_files.cpp
 	src/read_sprite_headers.cpp
 	src/pack_sprites.cpp
@@ -29,6 +30,9 @@ add_library(sm_ssmk
 	src/copy_sprites.cpp
 	src/build_png_chunk.cpp
 	src/write_png.cpp
+	# read sheet
+	src/read_sheet_header.cpp
+	src/extract_png_chunk.cpp
 	# miscellaneous
 	src/sprite.cpp
 	src/context.cpp

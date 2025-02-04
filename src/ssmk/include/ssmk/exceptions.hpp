@@ -27,12 +27,12 @@ enum type {
 	no_packing_metric,
 	not_decreasing_tree_fit_packing,
 
-	file_error, // class from Error
+	file_error, // class from error
 	config_not_found,
 	source_directory_not_found,
 	not_a_file_or_directory,
 
-	png_error, // class from FileError
+	png_error, // class from file_error
 	png_failed_to_open_for_reading,
 	png_failed_to_open_for_writting,
 	png_bad_signature,
@@ -41,22 +41,23 @@ enum type {
 	png_could_not_create_info_structure,
 	png_could_not_allocate_output_rows,
 	png_could_not_allocate_background_color,
+	png_no_ssmk_chunk,
 
-	toml_error, // class from FileError
+	toml_error, // class from file_error
 
-	config_error, // class from FileError
-	config_field_error, // class from FileError
+	config_error, // class from file_error
+	config_field_error, // class from file_error
 	config_no_input_table,
 	config_no_output_table,
 	config_no_input_file_array,
 	config_no_output_file,
-	config_wrong_field_type, // class from FieldError
-	config_unexpected_field_value, // class from FieldError
+	config_wrong_field_type, // class from field_error
+	config_unexpected_field_value, // class from field_error
 	config_unknown_packing_algorithm,
 	config_unknown_packing_metric,
 	config_not_RGB,
 	config_unknown_compression_level,
-	config_exclusive_field_values, // class from FieldError
+	config_exclusive_field_values, // class from field_error
 	config_increasing_tree_fit_packing,
 	
 	ssmk_error_space_end,
@@ -87,6 +88,7 @@ static const std::unordered_map<type, const std::string> text = {
 	{ png_could_not_create_info_structure, "could not create info structure" },
 	{ png_could_not_allocate_output_rows, "could not allocate memory for output image" },
 	{ png_could_not_allocate_background_color, "could not allocate background color" },
+	{ png_no_ssmk_chunk, "ssmk chunk not found" },
 
 	{ toml_error, "toml parse failed" },
 

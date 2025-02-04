@@ -6,6 +6,8 @@
 #include <functional>
 #include <cstddef>
 #include <type_traits>
+#include <map>
+#include <string>
 
 #define CALLBACK(NAME, ...) \
 	private: \
@@ -20,6 +22,15 @@
 		std::function<void(const context_type& __VA_OPT__(,) __VA_ARGS__)>& NAME##_callback() { \
 			return m_##NAME##_callback; \
 		}
+
+typedef struct png_struct_def png_struct;
+typedef png_struct* png_structp;
+typedef struct png_info_def png_info;
+typedef png_info* png_infop;
+typedef struct png_color_16_struct png_color_16;
+typedef png_color_16_struct* png_color_16p;
+typedef unsigned char png_byte;
+typedef png_byte* png_bytep;
 
 namespace sm {
 
@@ -110,6 +121,19 @@ public:
 	)
 
 public:
+	struct sheet_entry {
+		size_type x, y, width, height;
+	};
+	class sheet: public std::map<std::string, sheet_entry> {
+	protected:
+		std::size_t m_width, m_height;
+		int m_png_color, m_depth;
+		bool m_color_present, m_alpha_present; 
+		png_bytep* m_data;
+		png_structp m_png;
+		png_infop m_info;
+	};
+
 	template<typename P> typename 
 	std::enable_if<std::is_assignable<std::filesystem::path, P>::value>::type make_sheet(P&& dir) {
 		read_config(std::forward<P>(dir));
